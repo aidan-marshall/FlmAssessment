@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BranchProductApp.Core", "BranchProductApp.Core\BranchProductApp.Core.csproj", "{6F1B8426-DF9F-45E0-9885-B656AF5C6984}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BranchProductApp.WinForms", "BranchProductApp.WinForms\BranchProductApp.WinForms.csproj", "{D9A93C2F-8E30-42D6-AD75-223205E93FE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{6F1B8426-DF9F-45E0-9885-B656AF5C6984}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F1B8426-DF9F-45E0-9885-B656AF5C6984}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F1B8426-DF9F-45E0-9885-B656AF5C6984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A93C2F-8E30-42D6-AD75-223205E93FE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A93C2F-8E30-42D6-AD75-223205E93FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A93C2F-8E30-42D6-AD75-223205E93FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A93C2F-8E30-42D6-AD75-223205E93FE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
