@@ -1,7 +1,9 @@
 using BranchProductApp.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using BranchProductApp.Core.Services;
+using BranchProductApp.Core.Branches;
+using BranchProductApp.Core.Products;
+using BranchProductApp.Core.ProductBranchMappings;
 
 namespace BranchProductApp.WinForms;
 
@@ -18,7 +20,7 @@ static class Program
         var services = new ServiceCollection();
 
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer("Server=localhost;Database=BranchProductDb;Trusted_Connection=True;TrustServerCertificate=True")); 
+        options.UseSqlServer("Server=localhost;Database=BranchProductDb2;Trusted_Connection=True;TrustServerCertificate=True")); 
 
         services.AddTransient<IBranchService, BranchService>();
         services.AddTransient<IProductService, ProductService>();

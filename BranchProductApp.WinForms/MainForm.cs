@@ -1,5 +1,6 @@
-using BranchProductApp.Core.Models;
-using BranchProductApp.Core.Services;
+using BranchProductApp.Core.Branches;
+using BranchProductApp.Core.ProductBranchMappings;
+using BranchProductApp.Core.Products;
 
 namespace BranchProductApp.WinForms;
 
@@ -25,7 +26,7 @@ public partial class MainForm : Form
 
     private async Task LoadBranches()
     {
-        var branches = await branchService.GetAllBranchesAsync();
+        var branches = await branchService.GetBranches();
         BranchDataGridView.DataSource = branches.ToList();
         BranchDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
         BranchComboBox.DataSource = branches.ToList();
@@ -49,7 +50,7 @@ public partial class MainForm : Form
             OpenDate = BranchOpenDatePicker.Value
         };
 
-        await branchService.CreateBranchAsync(newBranch);
+        await branchService.CreateBranch(newBranch);
         await LoadBranches();
     }
 
@@ -62,7 +63,7 @@ public partial class MainForm : Form
             {
                 BranchNameTextBox.Text = selectedBranch.Name;
                 BranchTelephoneTextBox.Text = selectedBranch.TelephoneNumber;
-                BranchOpenDatePicker.Value = selectedBranch.OpenDate;
+                BranchOpenDatePicker.Value = selectedBranch.OpenDate ?? DateTime.Now;
             }
         }
     }
@@ -75,7 +76,7 @@ public partial class MainForm : Form
             selectedBranch.Name = BranchNameTextBox.Text;
             selectedBranch.TelephoneNumber = BranchTelephoneTextBox.Text;
             selectedBranch.OpenDate = BranchOpenDatePicker.Value;
-            await branchService.UpdateBranchAsync(selectedBranch);
+            await branchService.UpdateBranch(selectedBranch);
             await LoadBranches();
         }
     }
@@ -86,7 +87,7 @@ public partial class MainForm : Form
 
         if (selectedBranch != null)
         {
-            await branchService.DeleteBranchAsync(selectedBranch.Id);
+            await branchService.DeleteBranch(selectedBranch.Id);
             await LoadBranches();
         }
 
@@ -248,4 +249,11 @@ public partial class MainForm : Form
             MessageBox.Show("Please select a branch and a product.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
+
+    private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+
+    }
+
+
 }

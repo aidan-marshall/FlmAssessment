@@ -31,6 +31,8 @@ partial class MainForm
     {
         tabControl1 = new TabControl();
         BranchesTab = new TabPage();
+        BranchesExportButton = new Button();
+        BranchesImportButton = new Button();
         DeleteBranchButton = new Button();
         EditBranchButton = new Button();
         AddBranchButton = new Button();
@@ -39,6 +41,8 @@ partial class MainForm
         BranchTelephoneTextBox = new TextBox();
         BranchNameTextBox = new TextBox();
         ProductsTab = new TabPage();
+        ProductExportButton = new Button();
+        ProductsImportButton = new Button();
         DeleteProductButton = new Button();
         EditProductButton = new Button();
         AddProductButton = new Button();
@@ -53,6 +57,8 @@ partial class MainForm
         BranchDetailsDataGridView = new DataGridView();
         BranchComboBox = new ComboBox();
         sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
+        BranchDetailsImportButton = new Button();
+        BranchDetailsExportButton = new Button();
         tabControl1.SuspendLayout();
         BranchesTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).BeginInit();
@@ -76,6 +82,8 @@ partial class MainForm
         // 
         // BranchesTab
         // 
+        BranchesTab.Controls.Add(BranchesExportButton);
+        BranchesTab.Controls.Add(BranchesImportButton);
         BranchesTab.Controls.Add(DeleteBranchButton);
         BranchesTab.Controls.Add(EditBranchButton);
         BranchesTab.Controls.Add(AddBranchButton);
@@ -91,6 +99,26 @@ partial class MainForm
         BranchesTab.Text = "Branches";
         BranchesTab.UseVisualStyleBackColor = true;
         BranchesTab.Click += BranchesTab_Click;
+        // 
+        // BranchesExportButton
+        // 
+        BranchesExportButton.Location = new Point(702, 35);
+        BranchesExportButton.Name = "BranchesExportButton";
+        BranchesExportButton.Size = new Size(75, 23);
+        BranchesExportButton.TabIndex = 8;
+        BranchesExportButton.Text = "Export";
+        BranchesExportButton.UseVisualStyleBackColor = true;
+        BranchesExportButton.Click += BranchesExportButton_Click;
+        // 
+        // BranchesImportButton
+        // 
+        BranchesImportButton.Location = new Point(640, 35);
+        BranchesImportButton.Name = "BranchesImportButton";
+        BranchesImportButton.Size = new Size(56, 23);
+        BranchesImportButton.TabIndex = 7;
+        BranchesImportButton.Text = "Import";
+        BranchesImportButton.UseVisualStyleBackColor = true;
+        BranchesImportButton.Click += BranchesImportButton_Click;
         // 
         // DeleteBranchButton
         // 
@@ -156,6 +184,8 @@ partial class MainForm
         // 
         // ProductsTab
         // 
+        ProductsTab.Controls.Add(ProductExportButton);
+        ProductsTab.Controls.Add(ProductsImportButton);
         ProductsTab.Controls.Add(DeleteProductButton);
         ProductsTab.Controls.Add(EditProductButton);
         ProductsTab.Controls.Add(AddProductButton);
@@ -170,6 +200,26 @@ partial class MainForm
         ProductsTab.TabIndex = 1;
         ProductsTab.Text = "Products";
         ProductsTab.UseVisualStyleBackColor = true;
+        // 
+        // ProductExportButton
+        // 
+        ProductExportButton.Location = new Point(702, 35);
+        ProductExportButton.Name = "ProductExportButton";
+        ProductExportButton.Size = new Size(75, 23);
+        ProductExportButton.TabIndex = 8;
+        ProductExportButton.Text = "Export";
+        ProductExportButton.UseVisualStyleBackColor = true;
+        ProductExportButton.Click += ProductExportButton_Click;
+        // 
+        // ProductsImportButton
+        // 
+        ProductsImportButton.Location = new Point(638, 35);
+        ProductsImportButton.Name = "ProductsImportButton";
+        ProductsImportButton.Size = new Size(58, 23);
+        ProductsImportButton.TabIndex = 7;
+        ProductsImportButton.Text = "Import";
+        ProductsImportButton.UseVisualStyleBackColor = true;
+        ProductsImportButton.Click += ProductsImportButton_Click;
         // 
         // DeleteProductButton
         // 
@@ -237,6 +287,8 @@ partial class MainForm
         // 
         // BranchDetailsTab
         // 
+        BranchDetailsTab.Controls.Add(BranchDetailsExportButton);
+        BranchDetailsTab.Controls.Add(BranchDetailsImportButton);
         BranchDetailsTab.Controls.Add(ProductToAddComboBox);
         BranchDetailsTab.Controls.Add(BranchDetailsAddProductButton);
         BranchDetailsTab.Controls.Add(BranchDetailsDeleteButton);
@@ -303,6 +355,24 @@ partial class MainForm
         sqlCommand1.CommandTimeout = 30;
         sqlCommand1.EnableOptimizedParameterBinding = false;
         // 
+        // BranchDetailsImportButton
+        // 
+        BranchDetailsImportButton.Location = new Point(621, 5);
+        BranchDetailsImportButton.Name = "BranchDetailsImportButton";
+        BranchDetailsImportButton.Size = new Size(75, 23);
+        BranchDetailsImportButton.TabIndex = 5;
+        BranchDetailsImportButton.Text = "Import";
+        BranchDetailsImportButton.UseVisualStyleBackColor = true;
+        // 
+        // BranchDetailsExportButton
+        // 
+        BranchDetailsExportButton.Location = new Point(702, 6);
+        BranchDetailsExportButton.Name = "BranchDetailsExportButton";
+        BranchDetailsExportButton.Size = new Size(75, 23);
+        BranchDetailsExportButton.TabIndex = 6;
+        BranchDetailsExportButton.Text = "Export";
+        BranchDetailsExportButton.UseVisualStyleBackColor = true;
+        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -345,8 +415,14 @@ partial class MainForm
     private TabPage BranchDetailsTab;
     private DataGridView BranchDetailsDataGridView;
     private ComboBox BranchComboBox;
-    private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
     private Button BranchDetailsDeleteButton;
     private Button BranchDetailsAddProductButton;
     private ComboBox ProductToAddComboBox;
+    private Button BranchesExportButton;
+    private Button BranchesImportButton;
+    private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
+    private Button ProductExportButton;
+    private Button ProductsImportButton;
+    private Button BranchDetailsExportButton;
+    private Button BranchDetailsImportButton;
 }
