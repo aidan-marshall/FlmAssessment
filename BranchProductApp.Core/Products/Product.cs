@@ -1,4 +1,6 @@
-namespace BranchProductApp.Core.Models;
+using BranchProductApp.Core.ProductBranchMappings;
+
+namespace BranchProductApp.Core.Products;
 
 public class Product
 {
@@ -6,6 +8,5 @@ public class Product
     public string Name { get; set; }
     public bool WeightedItem { get; set; }
     public decimal SuggestedSellingPrice { get; set; }
-    
     public ICollection<ProductBranchMapping> ProductBranchMappings { get; set; }
 }

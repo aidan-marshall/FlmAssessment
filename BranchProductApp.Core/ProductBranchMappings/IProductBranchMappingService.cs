@@ -1,6 +1,6 @@
-﻿using BranchProductApp.Core.Models;
+﻿using BranchProductApp.Core.Products;
 
-namespace BranchProductApp.Core.Services
+namespace BranchProductApp.Core.ProductBranchMappings
 {
     public interface IProductBranchMappingService
     {

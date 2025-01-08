@@ -15,11 +15,10 @@ namespace BranchProductApp.Core.Migrations
                 name: "Branches",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TelephoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OpenDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    OpenDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,8 +29,7 @@ namespace BranchProductApp.Core.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WeightedItem = table.Column<bool>(type: "bit", nullable: false),
                     SuggestedSellingPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)

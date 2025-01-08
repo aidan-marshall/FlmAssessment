@@ -1,7 +1,7 @@
-﻿using BranchProductApp.Core.Models;
+﻿using BranchProductApp.Core.Products;
 using Microsoft.EntityFrameworkCore;
 
-namespace BranchProductApp.Core.Services
+namespace BranchProductApp.Core.ProductBranchMappings
 {
     public class ProductBranchMappingService(ApplicationDbContext dbContext) : IProductBranchMappingService
     {

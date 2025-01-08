@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BranchProductApp.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250108103240_InitialCreate")]
+    [Migration("20250108184516_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,19 +25,16 @@ namespace BranchProductApp.Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BranchProductApp.Core.Models.Branch", b =>
+            modelBuilder.Entity("BranchProductApp.Core.Branches.Branch", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OpenDate")
+                    b.Property<DateTime?>("OpenDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TelephoneNumber")
@@ -49,7 +46,7 @@ namespace BranchProductApp.Core.Migrations
                     b.ToTable("Branches");
                 });
 
-            modelBuilder.Entity("BranchProductApp.Core.Models.BranchProductMapping", b =>
+            modelBuilder.Entity("BranchProductApp.Core.ProductBranchMappings.ProductBranchMapping", b =>
                 {
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
@@ -64,13 +61,10 @@ namespace BranchProductApp.Core.Migrations
                     b.ToTable("ProductBranchMappings");
                 });
 
-            modelBuilder.Entity("BranchProductApp.Core.Models.Product", b =>
+            modelBuilder.Entity("BranchProductApp.Core.Products.Product", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -87,15 +81,15 @@ namespace BranchProductApp.Core.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("BranchProductApp.Core.Models.BranchProductMapping", b =>
+            modelBuilder.Entity("BranchProductApp.Core.ProductBranchMappings.ProductBranchMapping", b =>
                 {
-                    b.HasOne("BranchProductApp.Core.Models.Branch", "Branch")
+                    b.HasOne("BranchProductApp.Core.Branches.Branch", "Branch")
                         .WithMany("ProductBranchMappings")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BranchProductApp.Core.Models.Product", "Product")
+                    b.HasOne("BranchProductApp.Core.Products.Product", "Product")
                         .WithMany("ProductBranchMappings")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -106,12 +100,12 @@ namespace BranchProductApp.Core.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("BranchProductApp.Core.Models.Branch", b =>
+            modelBuilder.Entity("BranchProductApp.Core.Branches.Branch", b =>
                 {
                     b.Navigation("ProductBranchMappings");
                 });
 
-            modelBuilder.Entity("BranchProductApp.Core.Models.Product", b =>
+            modelBuilder.Entity("BranchProductApp.Core.Products.Product", b =>
                 {
                     b.Navigation("ProductBranchMappings");
                 });

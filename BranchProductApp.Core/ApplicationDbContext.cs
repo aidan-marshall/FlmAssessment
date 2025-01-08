@@ -1,4 +1,6 @@
-﻿using BranchProductApp.Core.Models;
+﻿using BranchProductApp.Core.Branches;
+using BranchProductApp.Core.ProductBranchMappings;
+using BranchProductApp.Core.Products;
 using Microsoft.EntityFrameworkCore;
 
 namespace BranchProductApp.Core;
@@ -25,5 +27,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(pbm => pbm.Product)
             .WithMany(p => p.ProductBranchMappings)
             .HasForeignKey(pbm => pbm.ProductId);
+
+        modelBuilder.Entity<Branch>()
+            .Property(b => b.Id)
+            .ValueGeneratedNever();
+
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
     }
 }

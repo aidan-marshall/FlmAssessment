@@ -1,6 +1,4 @@
-using BranchProductApp.Core.Models;
-
-namespace BranchProductApp.Core.Services;
+namespace BranchProductApp.Core.Products;
 
 public interface IProductService
 {

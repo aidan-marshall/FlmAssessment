@@ -1,7 +1,6 @@
-using BranchProductApp.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BranchProductApp.Core.Services;
+namespace BranchProductApp.Core.Products;
 
 public class ProductService(ApplicationDbContext dbContext) : IProductService
 {
@@ -35,7 +34,7 @@ public class ProductService(ApplicationDbContext dbContext) : IProductService
     {
         var product = await dbContext.Products.FindAsync(id);
         if (product == null) throw new KeyNotFoundException();
-        
+
         dbContext.Products.Remove(product);
         await dbContext.SaveChangesAsync();
         return true;

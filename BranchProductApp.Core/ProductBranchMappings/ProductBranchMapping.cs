@@ -1,4 +1,7 @@
-namespace BranchProductApp.Core.Models;
+using BranchProductApp.Core.Branches;
+using BranchProductApp.Core.Products;
+
+namespace BranchProductApp.Core.ProductBranchMappings;
 
 public class ProductBranchMapping
 {
