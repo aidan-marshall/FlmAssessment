@@ -7,5 +7,5 @@ public class Product
     public bool WeightedItem { get; set; }
     public decimal SuggestedSellingPrice { get; set; }
     
-    public ICollection<BranchProductMapping> ProductBranchMappings { get; set; }
+    public ICollection<ProductBranchMapping> ProductBranchMappings { get; set; }
 }

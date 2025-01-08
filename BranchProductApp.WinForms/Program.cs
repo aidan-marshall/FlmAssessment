@@ -22,6 +22,7 @@ static class Program
 
         services.AddTransient<IBranchService, BranchService>();
         services.AddTransient<IProductService, ProductService>();
+        services.AddTransient<IProductBranchMappingService, ProductBranchMappingService>();
         services.AddTransient<MainForm>();
 
         var serviceProvider = services.BuildServiceProvider();

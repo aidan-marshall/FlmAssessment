@@ -7,11 +7,13 @@ public partial class MainForm : Form
 {
     private readonly IBranchService branchService;
     private readonly IProductService productService;
-    public MainForm(IBranchService branchService, IProductService productService)
+    private readonly IProductBranchMappingService productBranchMappingService;
+    public MainForm(IBranchService BranchService, IProductService ProductService, IProductBranchMappingService ProductBranchMappingService)
     {
         InitializeComponent();
-        this.branchService = branchService;
-        this.productService = productService;
+        this.branchService = BranchService;
+        this.productService = ProductService;
+        this.productBranchMappingService = ProductBranchMappingService;
     }
 
     protected override async void OnLoad(EventArgs e)
@@ -26,6 +28,9 @@ public partial class MainForm : Form
         var branches = await branchService.GetAllBranchesAsync();
         BranchDataGridView.DataSource = branches.ToList();
         BranchDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+        BranchComboBox.DataSource = branches.ToList();
+        BranchComboBox.DisplayMember = "Name";
+        BranchComboBox.ValueMember = "Id";
     }
 
     private async Task LoadProducts()
@@ -164,5 +169,83 @@ public partial class MainForm : Form
     private void WeightedItemCheckBox_CheckedChanged(object sender, EventArgs e)
     {
 
+    }
+
+    private async void BranchComboBox_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (BranchComboBox.SelectedValue != null)
+        {
+            if (BranchComboBox.SelectedValue is int selectedBranchId)
+            {
+                await LoadBranchProducts(selectedBranchId);
+            }
+        }
+    }
+
+    private async Task LoadBranchProducts(int selectedBranchId)
+    {
+        var branchProducts = await productBranchMappingService.GetProductsForBranch(selectedBranchId);
+        var allProducts = await productService.GetProducts();
+        var availableProducts = allProducts.Where(p => !branchProducts.Any(bp => bp.Id == p.Id)).ToList();
+
+        BranchDetailsDataGridView.DataSource = branchProducts.ToList();
+        BranchDetailsDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+        ProductToAddComboBox.DataSource = availableProducts;
+        ProductToAddComboBox.DisplayMember = "Name";
+        ProductToAddComboBox.ValueMember = "Id";
+    }
+
+    private void BranchDetailsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    {
+
+    }
+
+    private int GetSelectedBranchId()
+    {
+        if (BranchComboBox.SelectedValue == null)
+        {
+            MessageBox.Show("Please select a branch.", "No Branch Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return -1;
+        }
+
+        if (BranchComboBox.SelectedValue is int selectedBranchId)
+        {
+            return selectedBranchId;
+        }
+
+        return -1;
+    }
+
+    private async void BranchDetailsDeleteButton_Click(object sender, EventArgs e)
+    {
+        var selectedProduct = BranchDetailsDataGridView.CurrentRow?.DataBoundItem as Product;
+        var selectedBranchId = GetSelectedBranchId();
+
+        if (selectedProduct != null)
+        {
+            await productBranchMappingService.UnassignProductFromBranch(selectedBranchId, selectedProduct.Id);
+            await LoadBranchProducts(selectedBranchId);
+        }
+    }
+
+    private async void BranchDetailsAddProductButton_Click(object sender, EventArgs e)
+    {
+        if (BranchComboBox.SelectedValue is int selectedBranchId && ProductToAddComboBox.SelectedValue is int selectedProductId)
+        {
+            try
+            {
+                await productBranchMappingService.AssignProductToBranch(selectedBranchId, selectedProductId);
+                MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await LoadBranchProducts(selectedBranchId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        else
+        {
+            MessageBox.Show("Please select a branch and a product.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
     }
 }

@@ -7,21 +7,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<BranchProductMapping> ProductBranchMappings { get; set; }
+    public DbSet<ProductBranchMapping> ProductBranchMappings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<BranchProductMapping>()
+        modelBuilder.Entity<ProductBranchMapping>()
             .HasKey(pm => new { pm.BranchId, pm.ProductId });
         
-        modelBuilder.Entity<BranchProductMapping>()
+        modelBuilder.Entity<ProductBranchMapping>()
             .HasOne(pm => pm.Branch)
             .WithMany(b => b.ProductBranchMappings)
             .HasForeignKey(pm => pm.BranchId);
 
-        modelBuilder.Entity<BranchProductMapping>()
+        modelBuilder.Entity<ProductBranchMapping>()
             .HasOne(pbm => pbm.Product)
             .WithMany(p => p.ProductBranchMappings)
             .HasForeignKey(pbm => pbm.ProductId);

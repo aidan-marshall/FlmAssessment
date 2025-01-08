@@ -46,17 +46,27 @@ partial class MainForm
         WeightedItemCheckBox = new CheckBox();
         ProductPriceTextBox = new TextBox();
         ProductNameTextBox = new TextBox();
+        BranchDetailsTab = new TabPage();
+        ProductToAddComboBox = new ComboBox();
+        BranchDetailsAddProductButton = new Button();
+        BranchDetailsDeleteButton = new Button();
+        BranchDetailsDataGridView = new DataGridView();
+        BranchComboBox = new ComboBox();
+        sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
         tabControl1.SuspendLayout();
         BranchesTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).BeginInit();
         ProductsTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)ProductDataGridView).BeginInit();
+        BranchDetailsTab.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)BranchDetailsDataGridView).BeginInit();
         SuspendLayout();
         // 
         // tabControl1
         // 
         tabControl1.Controls.Add(BranchesTab);
         tabControl1.Controls.Add(ProductsTab);
+        tabControl1.Controls.Add(BranchDetailsTab);
         tabControl1.Dock = DockStyle.Fill;
         tabControl1.Location = new Point(0, 0);
         tabControl1.Name = "tabControl1";
@@ -225,6 +235,74 @@ partial class MainForm
         ProductNameTextBox.Size = new Size(100, 23);
         ProductNameTextBox.TabIndex = 0;
         // 
+        // BranchDetailsTab
+        // 
+        BranchDetailsTab.Controls.Add(ProductToAddComboBox);
+        BranchDetailsTab.Controls.Add(BranchDetailsAddProductButton);
+        BranchDetailsTab.Controls.Add(BranchDetailsDeleteButton);
+        BranchDetailsTab.Controls.Add(BranchDetailsDataGridView);
+        BranchDetailsTab.Controls.Add(BranchComboBox);
+        BranchDetailsTab.Location = new Point(4, 24);
+        BranchDetailsTab.Name = "BranchDetailsTab";
+        BranchDetailsTab.Padding = new Padding(3);
+        BranchDetailsTab.Size = new Size(785, 417);
+        BranchDetailsTab.TabIndex = 2;
+        BranchDetailsTab.Text = "Branch Details";
+        BranchDetailsTab.UseVisualStyleBackColor = true;
+        // 
+        // ProductToAddComboBox
+        // 
+        ProductToAddComboBox.FormattingEnabled = true;
+        ProductToAddComboBox.Location = new Point(222, 6);
+        ProductToAddComboBox.Name = "ProductToAddComboBox";
+        ProductToAddComboBox.Size = new Size(143, 23);
+        ProductToAddComboBox.TabIndex = 4;
+        ProductToAddComboBox.Text = "Select a new product...";
+        // 
+        // BranchDetailsAddProductButton
+        // 
+        BranchDetailsAddProductButton.Location = new Point(371, 6);
+        BranchDetailsAddProductButton.Name = "BranchDetailsAddProductButton";
+        BranchDetailsAddProductButton.Size = new Size(86, 23);
+        BranchDetailsAddProductButton.TabIndex = 3;
+        BranchDetailsAddProductButton.Text = "Add Product";
+        BranchDetailsAddProductButton.UseVisualStyleBackColor = true;
+        BranchDetailsAddProductButton.Click += BranchDetailsAddProductButton_Click;
+        // 
+        // BranchDetailsDeleteButton
+        // 
+        BranchDetailsDeleteButton.Location = new Point(130, 6);
+        BranchDetailsDeleteButton.Name = "BranchDetailsDeleteButton";
+        BranchDetailsDeleteButton.Size = new Size(75, 23);
+        BranchDetailsDeleteButton.TabIndex = 2;
+        BranchDetailsDeleteButton.Text = "Delete ";
+        BranchDetailsDeleteButton.UseVisualStyleBackColor = true;
+        BranchDetailsDeleteButton.Click += BranchDetailsDeleteButton_Click;
+        // 
+        // BranchDetailsDataGridView
+        // 
+        BranchDetailsDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        BranchDetailsDataGridView.Location = new Point(0, 35);
+        BranchDetailsDataGridView.Name = "BranchDetailsDataGridView";
+        BranchDetailsDataGridView.Size = new Size(785, 382);
+        BranchDetailsDataGridView.TabIndex = 1;
+        BranchDetailsDataGridView.CellContentClick += BranchDetailsDataGridView_CellContentClick;
+        // 
+        // BranchComboBox
+        // 
+        BranchComboBox.FormattingEnabled = true;
+        BranchComboBox.Location = new Point(3, 6);
+        BranchComboBox.Name = "BranchComboBox";
+        BranchComboBox.Size = new Size(121, 23);
+        BranchComboBox.TabIndex = 0;
+        BranchComboBox.Text = "Select a Branch...";
+        BranchComboBox.SelectedIndexChanged += BranchComboBox_SelectedIndexChanged;
+        // 
+        // sqlCommand1
+        // 
+        sqlCommand1.CommandTimeout = 30;
+        sqlCommand1.EnableOptimizedParameterBinding = false;
+        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -240,6 +318,8 @@ partial class MainForm
         ProductsTab.ResumeLayout(false);
         ProductsTab.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)ProductDataGridView).EndInit();
+        BranchDetailsTab.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)BranchDetailsDataGridView).EndInit();
         ResumeLayout(false);
     }
 
@@ -262,4 +342,11 @@ partial class MainForm
     private Button AddProductButton;
     private DataGridView ProductDataGridView;
     private CheckBox WeightedItemCheckBox;
+    private TabPage BranchDetailsTab;
+    private DataGridView BranchDetailsDataGridView;
+    private ComboBox BranchComboBox;
+    private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
+    private Button BranchDetailsDeleteButton;
+    private Button BranchDetailsAddProductButton;
+    private ComboBox ProductToAddComboBox;
 }

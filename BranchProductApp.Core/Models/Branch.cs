@@ -7,5 +7,5 @@ public class Branch
     public string TelephoneNumber { get; set; }
     public DateTime OpenDate { get; set; }
     
-    public ICollection<BranchProductMapping> ProductBranchMappings { get; set; }
+    public ICollection<ProductBranchMapping> ProductBranchMappings { get; set; }
 }

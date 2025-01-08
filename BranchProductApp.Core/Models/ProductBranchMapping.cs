@@ -1,6 +1,6 @@
 namespace BranchProductApp.Core.Models;
 
-public class BranchProductMapping
+public class ProductBranchMapping
 {
     public int BranchId { get; set; }
     public Branch Branch { get; set; }
