@@ -31,23 +31,32 @@ partial class MainForm
     {
         tabControl1 = new TabControl();
         BranchesTab = new TabPage();
-        tabPage2 = new TabPage();
-        BranchNameTextBox = new TextBox();
-        BranchTelephoneTextBox = new TextBox();
-        BranchOpenDatePicker = new DateTimePicker();
-        BranchDataGridView = new DataGridView();
-        AddBranchButton = new Button();
-        EditBranchButton = new Button();
         DeleteBranchButton = new Button();
+        EditBranchButton = new Button();
+        AddBranchButton = new Button();
+        BranchDataGridView = new DataGridView();
+        BranchOpenDatePicker = new DateTimePicker();
+        BranchTelephoneTextBox = new TextBox();
+        BranchNameTextBox = new TextBox();
+        ProductsTab = new TabPage();
+        DeleteProductButton = new Button();
+        EditProductButton = new Button();
+        AddProductButton = new Button();
+        ProductDataGridView = new DataGridView();
+        WeightedItemCheckBox = new CheckBox();
+        ProductPriceTextBox = new TextBox();
+        ProductNameTextBox = new TextBox();
         tabControl1.SuspendLayout();
         BranchesTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).BeginInit();
+        ProductsTab.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)ProductDataGridView).BeginInit();
         SuspendLayout();
         // 
         // tabControl1
         // 
         tabControl1.Controls.Add(BranchesTab);
-        tabControl1.Controls.Add(tabPage2);
+        tabControl1.Controls.Add(ProductsTab);
         tabControl1.Dock = DockStyle.Fill;
         tabControl1.Location = new Point(0, 0);
         tabControl1.Name = "tabControl1";
@@ -71,32 +80,46 @@ partial class MainForm
         BranchesTab.TabIndex = 0;
         BranchesTab.Text = "Branches";
         BranchesTab.UseVisualStyleBackColor = true;
-        BranchesTab.Click += tabPage1_Click;
+        BranchesTab.Click += BranchesTab_Click;
         // 
-        // tabPage2
+        // DeleteBranchButton
         // 
-        tabPage2.Location = new Point(4, 24);
-        tabPage2.Name = "tabPage2";
-        tabPage2.Padding = new Padding(3);
-        tabPage2.Size = new Size(785, 417);
-        tabPage2.TabIndex = 1;
-        tabPage2.Text = "tabPage2";
-        tabPage2.UseVisualStyleBackColor = true;
+        DeleteBranchButton.Location = new Point(170, 35);
+        DeleteBranchButton.Name = "DeleteBranchButton";
+        DeleteBranchButton.Size = new Size(75, 23);
+        DeleteBranchButton.TabIndex = 6;
+        DeleteBranchButton.Text = "Delete";
+        DeleteBranchButton.UseVisualStyleBackColor = true;
+        DeleteBranchButton.Click += DeleteBranchButton_Click;
         // 
-        // BranchNameTextBox
+        // EditBranchButton
         // 
-        BranchNameTextBox.Location = new Point(6, 6);
-        BranchNameTextBox.Name = "BranchNameTextBox";
-        BranchNameTextBox.Size = new Size(100, 23);
-        BranchNameTextBox.TabIndex = 0;
-        BranchNameTextBox.TextChanged += textBox1_TextChanged_1;
+        EditBranchButton.Location = new Point(89, 35);
+        EditBranchButton.Name = "EditBranchButton";
+        EditBranchButton.Size = new Size(75, 23);
+        EditBranchButton.TabIndex = 5;
+        EditBranchButton.Text = "Edit";
+        EditBranchButton.UseVisualStyleBackColor = true;
+        EditBranchButton.Click += EditBranchButton_Click;
         // 
-        // BranchTelephoneTextBox
+        // AddBranchButton
         // 
-        BranchTelephoneTextBox.Location = new Point(112, 6);
-        BranchTelephoneTextBox.Name = "BranchTelephoneTextBox";
-        BranchTelephoneTextBox.Size = new Size(100, 23);
-        BranchTelephoneTextBox.TabIndex = 1;
+        AddBranchButton.Location = new Point(8, 35);
+        AddBranchButton.Name = "AddBranchButton";
+        AddBranchButton.Size = new Size(75, 23);
+        AddBranchButton.TabIndex = 4;
+        AddBranchButton.Text = "Create";
+        AddBranchButton.UseVisualStyleBackColor = true;
+        AddBranchButton.Click += AddBranchButton_Click;
+        // 
+        // BranchDataGridView
+        // 
+        BranchDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        BranchDataGridView.Location = new Point(0, 64);
+        BranchDataGridView.Name = "BranchDataGridView";
+        BranchDataGridView.Size = new Size(785, 353);
+        BranchDataGridView.TabIndex = 3;
+        BranchDataGridView.CellContentClick += BranchDataGridView_CellContentClick;
         // 
         // BranchOpenDatePicker
         // 
@@ -105,40 +128,102 @@ partial class MainForm
         BranchOpenDatePicker.Size = new Size(200, 23);
         BranchOpenDatePicker.TabIndex = 2;
         // 
-        // BranchDataGridView
+        // BranchTelephoneTextBox
         // 
-        BranchDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        BranchDataGridView.Location = new Point(218, 91);
-        BranchDataGridView.Name = "BranchDataGridView";
-        BranchDataGridView.Size = new Size(240, 150);
-        BranchDataGridView.TabIndex = 3;
+        BranchTelephoneTextBox.Location = new Point(112, 6);
+        BranchTelephoneTextBox.Name = "BranchTelephoneTextBox";
+        BranchTelephoneTextBox.Size = new Size(100, 23);
+        BranchTelephoneTextBox.TabIndex = 1;
+        BranchTelephoneTextBox.TextChanged += BranchTelephoneTextBox_TextChanged;
         // 
-        // AddBranchButton
+        // BranchNameTextBox
         // 
-        AddBranchButton.Location = new Point(31, 317);
-        AddBranchButton.Name = "AddBranchButton";
-        AddBranchButton.Size = new Size(75, 23);
-        AddBranchButton.TabIndex = 4;
-        AddBranchButton.Text = "button1";
-        AddBranchButton.UseVisualStyleBackColor = true;
+        BranchNameTextBox.Location = new Point(6, 6);
+        BranchNameTextBox.Name = "BranchNameTextBox";
+        BranchNameTextBox.Size = new Size(100, 23);
+        BranchNameTextBox.TabIndex = 0;
+        BranchNameTextBox.TextChanged += BranchNameTextBox_TextChanged;
         // 
-        // EditBranchButton
+        // ProductsTab
         // 
-        EditBranchButton.Location = new Point(112, 317);
-        EditBranchButton.Name = "EditBranchButton";
-        EditBranchButton.Size = new Size(75, 23);
-        EditBranchButton.TabIndex = 5;
-        EditBranchButton.Text = "button2";
-        EditBranchButton.UseVisualStyleBackColor = true;
+        ProductsTab.Controls.Add(DeleteProductButton);
+        ProductsTab.Controls.Add(EditProductButton);
+        ProductsTab.Controls.Add(AddProductButton);
+        ProductsTab.Controls.Add(ProductDataGridView);
+        ProductsTab.Controls.Add(WeightedItemCheckBox);
+        ProductsTab.Controls.Add(ProductPriceTextBox);
+        ProductsTab.Controls.Add(ProductNameTextBox);
+        ProductsTab.Location = new Point(4, 24);
+        ProductsTab.Name = "ProductsTab";
+        ProductsTab.Padding = new Padding(3);
+        ProductsTab.Size = new Size(785, 417);
+        ProductsTab.TabIndex = 1;
+        ProductsTab.Text = "Products";
+        ProductsTab.UseVisualStyleBackColor = true;
         // 
-        // DeleteBranchButton
+        // DeleteProductButton
         // 
-        DeleteBranchButton.Location = new Point(193, 317);
-        DeleteBranchButton.Name = "DeleteBranchButton";
-        DeleteBranchButton.Size = new Size(75, 23);
-        DeleteBranchButton.TabIndex = 6;
-        DeleteBranchButton.Text = "button3";
-        DeleteBranchButton.UseVisualStyleBackColor = true;
+        DeleteProductButton.Location = new Point(170, 35);
+        DeleteProductButton.Name = "DeleteProductButton";
+        DeleteProductButton.Size = new Size(75, 23);
+        DeleteProductButton.TabIndex = 6;
+        DeleteProductButton.Text = "Delete";
+        DeleteProductButton.UseVisualStyleBackColor = true;
+        DeleteProductButton.Click += DeleteProductButton_Click;
+        // 
+        // EditProductButton
+        // 
+        EditProductButton.Location = new Point(89, 35);
+        EditProductButton.Name = "EditProductButton";
+        EditProductButton.Size = new Size(75, 23);
+        EditProductButton.TabIndex = 5;
+        EditProductButton.Text = "Edit";
+        EditProductButton.UseVisualStyleBackColor = true;
+        EditProductButton.Click += EditProductButton_Click;
+        // 
+        // AddProductButton
+        // 
+        AddProductButton.Location = new Point(8, 35);
+        AddProductButton.Name = "AddProductButton";
+        AddProductButton.Size = new Size(75, 23);
+        AddProductButton.TabIndex = 4;
+        AddProductButton.Text = "Create";
+        AddProductButton.UseVisualStyleBackColor = true;
+        AddProductButton.Click += AddProductButton_Click;
+        // 
+        // ProductDataGridView
+        // 
+        ProductDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        ProductDataGridView.Location = new Point(8, 64);
+        ProductDataGridView.Name = "ProductDataGridView";
+        ProductDataGridView.Size = new Size(769, 345);
+        ProductDataGridView.TabIndex = 3;
+        ProductDataGridView.CellContentClick += ProductDataGridView_CellContentClick;
+        // 
+        // WeightedItemCheckBox
+        // 
+        WeightedItemCheckBox.AutoSize = true;
+        WeightedItemCheckBox.Location = new Point(114, 8);
+        WeightedItemCheckBox.Name = "WeightedItemCheckBox";
+        WeightedItemCheckBox.Size = new Size(101, 19);
+        WeightedItemCheckBox.TabIndex = 2;
+        WeightedItemCheckBox.Text = "WeightedItem";
+        WeightedItemCheckBox.UseVisualStyleBackColor = true;
+        WeightedItemCheckBox.CheckedChanged += WeightedItemCheckBox_CheckedChanged;
+        // 
+        // ProductPriceTextBox
+        // 
+        ProductPriceTextBox.Location = new Point(221, 6);
+        ProductPriceTextBox.Name = "ProductPriceTextBox";
+        ProductPriceTextBox.Size = new Size(100, 23);
+        ProductPriceTextBox.TabIndex = 1;
+        // 
+        // ProductNameTextBox
+        // 
+        ProductNameTextBox.Location = new Point(8, 6);
+        ProductNameTextBox.Name = "ProductNameTextBox";
+        ProductNameTextBox.Size = new Size(100, 23);
+        ProductNameTextBox.TabIndex = 0;
         // 
         // MainForm
         // 
@@ -152,6 +237,9 @@ partial class MainForm
         BranchesTab.ResumeLayout(false);
         BranchesTab.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).EndInit();
+        ProductsTab.ResumeLayout(false);
+        ProductsTab.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)ProductDataGridView).EndInit();
         ResumeLayout(false);
     }
 
@@ -159,7 +247,7 @@ partial class MainForm
 
     private TabControl tabControl1;
     private TabPage BranchesTab;
-    private TabPage tabPage2;
+    private TabPage ProductsTab;
     private TextBox BranchTelephoneTextBox;
     private TextBox BranchNameTextBox;
     private Button DeleteBranchButton;
@@ -167,4 +255,11 @@ partial class MainForm
     private Button AddBranchButton;
     private DataGridView BranchDataGridView;
     private DateTimePicker BranchOpenDatePicker;
+    private TextBox ProductPriceTextBox;
+    private TextBox ProductNameTextBox;
+    private Button DeleteProductButton;
+    private Button EditProductButton;
+    private Button AddProductButton;
+    private DataGridView ProductDataGridView;
+    private CheckBox WeightedItemCheckBox;
 }

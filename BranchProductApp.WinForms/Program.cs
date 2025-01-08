@@ -18,7 +18,7 @@ static class Program
         var services = new ServiceCollection();
 
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer("DefaultConnectionString"));
+        options.UseSqlServer("Server=localhost;Database=BranchProductDb;Trusted_Connection=True;TrustServerCertificate=True")); 
 
         services.AddTransient<IBranchService, BranchService>();
         services.AddTransient<IProductService, ProductService>();
