@@ -4,6 +4,7 @@ using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 using BranchProductApp.Core.Branches;
 using BranchProductApp.Core.Products;
+using BranchProductApp.Core.Parsers.Converters;
 
 namespace BranchProductApp.Core.Parsers
 {
@@ -51,8 +52,8 @@ namespace BranchProductApp.Core.Parsers
             {
                 Map(m => m.Id).Name("ID");
                 Map(m => m.Name).Name("Name");
-                Map(m => m.WeightedItem).Name("WeightedItem");
-                Map(m => m.SuggestedSellingPrice).Name("SuggestedSellingPrice");
+                Map(m => m.WeightedItem).Name("WeightedItem").TypeConverter<YesNoBooleanConverter>();
+                Map(m => m.SuggestedSellingPrice).Name("SuggestedSellingPrice").TypeConverter<CustomDecimalConverter>();
                 Map(m => m.ProductBranchMappings).Ignore();
             }
         }
@@ -68,6 +69,24 @@ namespace BranchProductApp.Core.Parsers
             }
 
             return DateTime.TryParseExact(text, "yyyy/MM/dd", null, DateTimeStyles.None, out var parsedDate) ? parsedDate : null;
+        }
+    }
+
+    public class YesNoBooleanConverter : ITypeConverter
+    {
+        public object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            return text.ToUpper() == "Y";
+        }
+
+        public string ConvertToString(object value, IWriterRow row, MemberMapData memberMapData)
+        {
+            return ((bool)value) ? "Y" : "N";
         }
     }
 }

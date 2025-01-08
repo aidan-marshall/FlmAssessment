@@ -51,14 +51,14 @@ partial class MainForm
         ProductPriceTextBox = new TextBox();
         ProductNameTextBox = new TextBox();
         BranchDetailsTab = new TabPage();
+        BranchDetailsExportButton = new Button();
+        BranchDetailsImportButton = new Button();
         ProductToAddComboBox = new ComboBox();
         BranchDetailsAddProductButton = new Button();
         BranchDetailsDeleteButton = new Button();
         BranchDetailsDataGridView = new DataGridView();
         BranchComboBox = new ComboBox();
         sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
-        BranchDetailsImportButton = new Button();
-        BranchDetailsExportButton = new Button();
         tabControl1.SuspendLayout();
         BranchesTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).BeginInit();
@@ -302,6 +302,26 @@ partial class MainForm
         BranchDetailsTab.Text = "Branch Details";
         BranchDetailsTab.UseVisualStyleBackColor = true;
         // 
+        // BranchDetailsExportButton
+        // 
+        BranchDetailsExportButton.Location = new Point(702, 6);
+        BranchDetailsExportButton.Name = "BranchDetailsExportButton";
+        BranchDetailsExportButton.Size = new Size(75, 23);
+        BranchDetailsExportButton.TabIndex = 6;
+        BranchDetailsExportButton.Text = "Export";
+        BranchDetailsExportButton.UseVisualStyleBackColor = true;
+        BranchDetailsExportButton.Click += BranchDetailsExportButton_Click;
+        // 
+        // BranchDetailsImportButton
+        // 
+        BranchDetailsImportButton.Location = new Point(621, 5);
+        BranchDetailsImportButton.Name = "BranchDetailsImportButton";
+        BranchDetailsImportButton.Size = new Size(75, 23);
+        BranchDetailsImportButton.TabIndex = 5;
+        BranchDetailsImportButton.Text = "Import";
+        BranchDetailsImportButton.UseVisualStyleBackColor = true;
+        BranchDetailsImportButton.Click += BranchDetailsImportButton_Click;
+        // 
         // ProductToAddComboBox
         // 
         ProductToAddComboBox.FormattingEnabled = true;
@@ -354,24 +374,6 @@ partial class MainForm
         // 
         sqlCommand1.CommandTimeout = 30;
         sqlCommand1.EnableOptimizedParameterBinding = false;
-        // 
-        // BranchDetailsImportButton
-        // 
-        BranchDetailsImportButton.Location = new Point(621, 5);
-        BranchDetailsImportButton.Name = "BranchDetailsImportButton";
-        BranchDetailsImportButton.Size = new Size(75, 23);
-        BranchDetailsImportButton.TabIndex = 5;
-        BranchDetailsImportButton.Text = "Import";
-        BranchDetailsImportButton.UseVisualStyleBackColor = true;
-        // 
-        // BranchDetailsExportButton
-        // 
-        BranchDetailsExportButton.Location = new Point(702, 6);
-        BranchDetailsExportButton.Name = "BranchDetailsExportButton";
-        BranchDetailsExportButton.Size = new Size(75, 23);
-        BranchDetailsExportButton.TabIndex = 6;
-        BranchDetailsExportButton.Text = "Export";
-        BranchDetailsExportButton.UseVisualStyleBackColor = true;
         // 
         // MainForm
         // 

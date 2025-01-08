@@ -7,4 +7,5 @@ public interface IProductService
     Task<Product> CreateProduct(Product product);
     Task<Product> UpdateProduct(Product product);
     Task<bool> DeleteProduct(int id);
+    Task AddProducts(List<Product> products);
 }

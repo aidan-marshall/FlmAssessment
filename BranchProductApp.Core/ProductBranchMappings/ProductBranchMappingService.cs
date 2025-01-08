@@ -17,6 +17,11 @@ namespace BranchProductApp.Core.ProductBranchMappings
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<ProductBranchMapping>> GetAllMappings()
+        {
+            return await dbContext.ProductBranchMappings.ToListAsync();
+        }
+
         public async Task<List<Product>> GetProductsForBranch(int branchId)
         {
             return await dbContext.ProductBranchMappings

@@ -4,36 +4,36 @@ namespace BranchProductApp.WinForms
 {
     public partial class MainForm
     {
-        private void BranchDetailsImportButton_Click(object sender, EventArgs e)
+        private async void ProductsImportButton_Click(object sender, EventArgs e)
         {
 
         }
 
-        private async void BranchDetailsExportButton_Click(object sender, EventArgs e)
+        private async void ProductExportButton_Click(object sender, EventArgs e)
         {
             using (var saveFileDialog = new SaveFileDialog())
             {
-                saveFileDialog.Title = "Save Branch Details Export";
+                saveFileDialog.Title = "Save Products Export";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string selectedFilePath = saveFileDialog.FileName;
-                    var branchDetails = await productBranchMappingService.GetAllMappings();
+                    var products = await productService.GetProducts();
 
                     if (selectedFilePath.EndsWith(".csv"))
                     {
-                        DataExportService.ExportToCsv(branchDetails, selectedFilePath);
+                        DataExportService.ExportToCsv(products, selectedFilePath);
                     }
                     else if (selectedFilePath.EndsWith(".json"))
                     {
-                        DataExportService.ExportToJson(branchDetails, selectedFilePath);
+                        DataExportService.ExportToJson(products, selectedFilePath);
                     }
                     else if (selectedFilePath.EndsWith(".xml"))
                     {
-                        DataExportService.ExportToXml(branchDetails, selectedFilePath);
+                        DataExportService.ExportToXml(products, selectedFilePath);
                     }
 
-                    MessageBox.Show("Branch details have been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Products data has been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
