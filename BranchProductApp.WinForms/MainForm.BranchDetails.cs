@@ -21,7 +21,7 @@ namespace BranchProductApp.WinForms
                 var branchDetails = fileExtension switch
                 {
                     ".csv" => CsvImporter.ParseCsvMappings(filePath),
-                    ".json" => throw new NotImplementedException(),
+                    ".json" => JsonParser.ParseMappingsJson(filePath),
                     ".xml" => throw new NotImplementedException(),
                     _ => throw new NotSupportedException("File format not supported")
                 };
@@ -140,6 +140,17 @@ namespace BranchProductApp.WinForms
         {
             try
             {
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                {
+                    return;
+                }
+
+                var deleteButtonColumnName = "BranchDetailsRemoveButton";
+                if (BranchDetailsDataGridView.Columns[e.ColumnIndex].Name != deleteButtonColumnName)
+                {
+                    return;
+                }
+
                 var selectedBranchId = GetSelectedBranchId();
 
                 if (selectedBranchId == -1)

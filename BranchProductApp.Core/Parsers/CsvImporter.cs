@@ -10,7 +10,7 @@ namespace BranchProductApp.Core.Parsers
 {
     public static class CsvImporter
     {
-        public static List<Branch> ParseCsv(string filePath)
+        public static List<Branch> ParseCsvForBranches(string filePath)
         {
             var branches = new List<Branch>();
             using (var reader = new StreamReader(filePath))

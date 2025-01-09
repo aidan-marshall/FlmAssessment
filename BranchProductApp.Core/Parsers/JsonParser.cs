@@ -1,68 +1,92 @@
 ﻿using BranchProductApp.Core.Branches;
+using BranchProductApp.Core.Parsers.Converters;
+using BranchProductApp.Core.Products;
+using BranchProductApp.Core.ProductBranchMappings;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BranchProductApp.Core.Parsers
+namespace BranchProductApp.Core.Parsers;
+
+public static class JsonParser
 {
-    public static class JsonParser
+    public static List<Branch> ParseBranchesJson(string filePath)
     {
-        public static List<Branch> ParseJson(string filePath)
+        var jsonFile = File.ReadAllText(filePath);
+        jsonFile = filePath.Trim();
+
+        if (jsonFile == null)
         {
-            var jsonFile = File.ReadAllText(filePath);
-            jsonFile = filePath.Trim();
+            throw new Exception("File is empty");
+        }
 
-            if (jsonFile == null)
-            {
-                throw new Exception("File is empty");
-            }
+        var options = new JsonSerializerOptions
+        {
+            Converters = { new NullableDateTimeConverter(), new TelephoneNumberConverter() },
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNameCaseInsensitive = true
+        };
 
-            var options = new JsonSerializerOptions
-            {
-                Converters = { new NullableDateTimeConverter(), new TelephoneNumberConverter() },
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                PropertyNameCaseInsensitive = true
-            };
-
-            try
-            {
-                return JsonSerializer.Deserialize<List<Branch>>(jsonFile, options);
-            }
-            catch (JsonException ex)
-            {
-                // Handle or log the exception as needed
-                throw new InvalidOperationException("Failed to parse JSON.", ex);
-            }
+        try
+        {
+            return JsonSerializer.Deserialize<List<Branch>>(jsonFile, options);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("Failed to parse JSON.", ex);
         }
     }
 
-    public class NullableDateTimeConverter : JsonConverter<DateTime?>
+    public static List<Product> ParseProductsJson(string filePath)
     {
-        public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        var jsonFile = File.ReadAllText(filePath);
+        jsonFile = jsonFile.Trim();
+
+        if (jsonFile == null)
         {
-            return reader.TokenType == JsonTokenType.String && DateTime.TryParse(reader.GetString(), out var date) ? date : (DateTime?)null;
+            throw new Exception("File is empty");
         }
 
-        public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
+        var options = new JsonSerializerOptions
         {
-            writer.WriteStringValue(value?.ToString("yyyy/MM/dd"));
+            Converters = {new JsonWeightedItemConverter()},
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNameCaseInsensitive = true
+        };
+
+        try
+        {
+            return JsonSerializer.Deserialize<List<Product>>(jsonFile, options);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("Failed to parse JSON.", ex);
         }
     }
 
-    public class TelephoneNumberConverter : JsonConverter<string>
+    public static List<ProductBranchMapping> ParseMappingsJson(string filePath)
     {
-        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        var jsonFile = File.ReadAllText(filePath);
+        jsonFile = jsonFile.Trim();
+
+        if (jsonFile == null)
         {
-            return reader.TokenType switch
-            {
-                JsonTokenType.String => reader.GetString(),
-                JsonTokenType.Number => reader.GetInt64().ToString(),
-                _ => null
-            };
+            throw new Exception("File is empty");
         }
 
-        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+        var options = new JsonSerializerOptions
         {
-            writer.WriteStringValue(value);
+            Converters = { },
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNameCaseInsensitive = true
+        };
+
+        try
+        {
+            return JsonSerializer.Deserialize<List<ProductBranchMapping>>(jsonFile, options);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("Failed to parse JSON.", ex);
         }
     }
 }

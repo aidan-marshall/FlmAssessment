@@ -56,9 +56,9 @@ partial class MainForm
         ProductToAddComboBox = new ComboBox();
         BranchDetailsAddProductButton = new Button();
         BranchDetailsDataGridView = new DataGridView();
-        BranchDetailsRemoveButton = new DataGridViewButtonColumn();
         BranchComboBox = new ComboBox();
         sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
+        BranchDetailsRemoveButton = new DataGridViewButtonColumn();
         tabControl1.SuspendLayout();
         BranchesTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).BeginInit();
@@ -353,11 +353,6 @@ partial class MainForm
         BranchDetailsDataGridView.TabIndex = 1;
         BranchDetailsDataGridView.CellContentClick += BranchDetailsDataGridView_CellContentClick;
         // 
-        // BranchDetailsRemoveButton
-        // 
-        BranchDetailsRemoveButton.HeaderText = "Delete";
-        BranchDetailsRemoveButton.Name = "BranchDetailsRemoveButton";
-        // 
         // BranchComboBox
         // 
         BranchComboBox.FormattingEnabled = true;
@@ -372,6 +367,13 @@ partial class MainForm
         // 
         sqlCommand1.CommandTimeout = 30;
         sqlCommand1.EnableOptimizedParameterBinding = false;
+        // 
+        // BranchDetailsRemoveButton
+        // 
+        BranchDetailsRemoveButton.HeaderText = "Delete";
+        BranchDetailsRemoveButton.Name = "BranchDetailsRemoveButton";
+        BranchDetailsRemoveButton.Text = "Remove Product";
+        BranchDetailsRemoveButton.UseColumnTextForButtonValue = true;
         // 
         // MainForm
         // 
