@@ -8,5 +8,6 @@ namespace BranchProductApp.Core.ProductBranchMappings
         Task AssignProductToBranch(int branchId, int productId);
         Task UnassignProductFromBranch(int branchId, int productId);
         Task<List<ProductBranchMapping>> GetAllMappings();
+        Task AddMappings(List<ProductBranchMapping> mappings);
     }
 }

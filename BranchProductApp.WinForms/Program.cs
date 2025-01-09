@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using BranchProductApp.Core.Branches;
 using BranchProductApp.Core.Products;
 using BranchProductApp.Core.ProductBranchMappings;
+using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace BranchProductApp.WinForms;
 
@@ -17,10 +19,18 @@ static class Program
     {
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
+        
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+
         var services = new ServiceCollection();
 
+        services.AddLogging(configure => configure.AddSerilog(dispose: true));
+
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer("Server=localhost;Database=BranchProductDb2;Trusted_Connection=True;TrustServerCertificate=True")); 
+        options.UseSqlServer("Server=localhost;Database=BranchProductDb2;Trusted_Connection=True;TrustServerCertificate=True"));
 
         services.AddTransient<IBranchService, BranchService>();
         services.AddTransient<IProductService, ProductService>();
@@ -28,7 +38,7 @@ static class Program
         services.AddTransient<MainForm>();
 
         var serviceProvider = services.BuildServiceProvider();
-        
+
         ApplicationConfiguration.Initialize();
         var mainForm = serviceProvider.GetRequiredService<MainForm>();
         Application.Run(mainForm);

@@ -152,6 +152,7 @@ partial class MainForm
         // 
         // BranchDataGridView
         // 
+        BranchDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         BranchDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         BranchDataGridView.Location = new Point(0, 64);
         BranchDataGridView.Name = "BranchDataGridView";
@@ -253,10 +254,11 @@ partial class MainForm
         // 
         // ProductDataGridView
         // 
+        ProductDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         ProductDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        ProductDataGridView.Location = new Point(8, 64);
+        ProductDataGridView.Location = new Point(0, 64);
         ProductDataGridView.Name = "ProductDataGridView";
-        ProductDataGridView.Size = new Size(769, 345);
+        ProductDataGridView.Size = new Size(785, 353);
         ProductDataGridView.TabIndex = 3;
         ProductDataGridView.CellContentClick += ProductDataGridView_CellContentClick;
         // 
@@ -353,6 +355,7 @@ partial class MainForm
         // 
         // BranchDetailsDataGridView
         // 
+        BranchDetailsDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         BranchDetailsDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         BranchDetailsDataGridView.Location = new Point(0, 35);
         BranchDetailsDataGridView.Name = "BranchDetailsDataGridView";

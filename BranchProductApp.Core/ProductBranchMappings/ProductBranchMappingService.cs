@@ -1,10 +1,24 @@
-﻿using BranchProductApp.Core.Products;
+﻿using BranchProductApp.Core.Branches;
+using BranchProductApp.Core.Products;
 using Microsoft.EntityFrameworkCore;
 
 namespace BranchProductApp.Core.ProductBranchMappings
 {
     public class ProductBranchMappingService(ApplicationDbContext dbContext) : IProductBranchMappingService
     {
+        public async Task AddMappings(List<ProductBranchMapping> mappings)
+        {
+            try
+            {
+                dbContext.ProductBranchMappings.AddRange(mappings);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task AssignProductToBranch(int branchId, int productId)
         {
             var productBranchMapping = new ProductBranchMapping

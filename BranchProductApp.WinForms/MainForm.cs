@@ -1,6 +1,7 @@
 using BranchProductApp.Core.Branches;
 using BranchProductApp.Core.ProductBranchMappings;
 using BranchProductApp.Core.Products;
+using Microsoft.Extensions.Logging;
 
 namespace BranchProductApp.WinForms;
 
@@ -9,12 +10,14 @@ public partial class MainForm : Form
     private readonly IBranchService branchService;
     private readonly IProductService productService;
     private readonly IProductBranchMappingService productBranchMappingService;
-    public MainForm(IBranchService BranchService, IProductService ProductService, IProductBranchMappingService ProductBranchMappingService)
+    private readonly ILogger<MainForm> logger;
+    public MainForm(IBranchService BranchService, IProductService ProductService, IProductBranchMappingService ProductBranchMappingService, ILogger<MainForm> Logger)
     {
         InitializeComponent();
         this.branchService = BranchService;
         this.productService = ProductService;
         this.productBranchMappingService = ProductBranchMappingService;
+        this.logger = Logger;
     }
 
     protected override async void OnLoad(EventArgs e)
@@ -201,54 +204,7 @@ public partial class MainForm : Form
 
     }
 
-    private int GetSelectedBranchId()
-    {
-        if (BranchComboBox.SelectedValue == null)
-        {
-            MessageBox.Show("Please select a branch.", "No Branch Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return -1;
-        }
 
-        if (BranchComboBox.SelectedValue is int selectedBranchId)
-        {
-            return selectedBranchId;
-        }
-
-        return -1;
-    }
-
-    private async void BranchDetailsDeleteButton_Click(object sender, EventArgs e)
-    {
-        var selectedProduct = BranchDetailsDataGridView.CurrentRow?.DataBoundItem as Product;
-        var selectedBranchId = GetSelectedBranchId();
-
-        if (selectedProduct != null)
-        {
-            await productBranchMappingService.UnassignProductFromBranch(selectedBranchId, selectedProduct.Id);
-            await LoadBranchProducts(selectedBranchId);
-        }
-    }
-
-    private async void BranchDetailsAddProductButton_Click(object sender, EventArgs e)
-    {
-        if (BranchComboBox.SelectedValue is int selectedBranchId && ProductToAddComboBox.SelectedValue is int selectedProductId)
-        {
-            try
-            {
-                await productBranchMappingService.AssignProductToBranch(selectedBranchId, selectedProductId);
-                MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadBranchProducts(selectedBranchId);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        else
-        {
-            MessageBox.Show("Please select a branch and a product.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-    }
 
 
 }

@@ -1,4 +1,3 @@
-using BranchProductApp.Core.Branches;
 using Microsoft.EntityFrameworkCore;
 
 namespace BranchProductApp.Core.Products;
@@ -44,15 +43,7 @@ public class ProductService(ApplicationDbContext dbContext) : IProductService
     {
         try
         {
-            foreach (var product in products)
-            {
-                if (product.Id == 0)
-                {
-                    product.Id = await GenerateNewIdAsync();
-                }
-            }
-
-            dbContext.AddRange(products);
+            dbContext.Products.AddRange(products);
             await dbContext.SaveChangesAsync();
         }
         catch (Exception)
@@ -63,7 +54,7 @@ public class ProductService(ApplicationDbContext dbContext) : IProductService
 
     private async Task<int> GenerateNewIdAsync()
     {
-        var maxId = await dbContext.Branches.MaxAsync(b => (int?)b.Id) ?? 0;
+        var maxId = await dbContext.Products.MaxAsync(b => (int?)b.Id) ?? 0;
         return maxId + 1;
     }
 }

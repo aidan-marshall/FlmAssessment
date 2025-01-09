@@ -1,14 +1,14 @@
 ﻿using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
-using CsvHelper.TypeConversion;
 using BranchProductApp.Core.Branches;
 using BranchProductApp.Core.Products;
+using BranchProductApp.Core.ProductBranchMappings;
 using BranchProductApp.Core.Parsers.Converters;
 
 namespace BranchProductApp.Core.Parsers
 {
-    public static class CsvParser
+    public static class CsvImporter
     {
         public static List<Branch> ParseCsv(string filePath)
         {
@@ -34,6 +34,29 @@ namespace BranchProductApp.Core.Parsers
             return products;
         }
 
+        public static List<ProductBranchMapping> ParseCsvMappings(string filePath)
+        {
+            var mappings = new List<ProductBranchMapping>();
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap<MappingMap>();
+                mappings = csv.GetRecords<ProductBranchMapping>().ToList();
+            }
+            return mappings;
+        }
+
+        internal sealed class MappingMap : ClassMap<ProductBranchMapping>
+        {
+            public MappingMap()
+            {
+                Map(m => m.BranchId).Name("BranchID");
+                Map(m => m.ProductId).Name("ProductID");
+                Map(m => m.Branch).Ignore();
+                Map(m => m.Product).Ignore();
+            }
+        }
+
         internal sealed class BranchMap : ClassMap<Branch>
         {
             public BranchMap()
@@ -56,37 +79,6 @@ namespace BranchProductApp.Core.Parsers
                 Map(m => m.SuggestedSellingPrice).Name("SuggestedSellingPrice").TypeConverter<CustomDecimalConverter>();
                 Map(m => m.ProductBranchMappings).Ignore();
             }
-        }
-    }
-
-    public class CustomDateTimeConverter : DateTimeConverter
-    {
-        public override object? ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return null;
-            }
-
-            return DateTime.TryParseExact(text, "yyyy/MM/dd", null, DateTimeStyles.None, out var parsedDate) ? parsedDate : null;
-        }
-    }
-
-    public class YesNoBooleanConverter : ITypeConverter
-    {
-        public object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return false;
-            }
-
-            return text.ToUpper() == "Y";
-        }
-
-        public string ConvertToString(object value, IWriterRow row, MemberMapData memberMapData)
-        {
-            return ((bool)value) ? "Y" : "N";
         }
     }
 }

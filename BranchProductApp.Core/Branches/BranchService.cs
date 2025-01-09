@@ -45,15 +45,7 @@ public class BranchService(ApplicationDbContext dbContext) : IBranchService
     {
         try
         {
-            foreach (var branch in branches)
-            {
-                if (branch.Id == null || branch.Id == 0)
-                {
-                    branch.Id = await GenerateNewIdAsync();
-                }
-            }
-
-            dbContext.AddRange(branches);
+            dbContext.Branches.AddRange(branches);
             await dbContext.SaveChangesAsync();
         }
         catch (Exception)
