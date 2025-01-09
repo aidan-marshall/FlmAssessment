@@ -33,7 +33,6 @@ partial class MainForm
         BranchesTab = new TabPage();
         BranchesExportButton = new Button();
         BranchesImportButton = new Button();
-        DeleteBranchButton = new Button();
         EditBranchButton = new Button();
         AddBranchButton = new Button();
         BranchDataGridView = new DataGridView();
@@ -43,10 +42,10 @@ partial class MainForm
         ProductsTab = new TabPage();
         ProductExportButton = new Button();
         ProductsImportButton = new Button();
-        DeleteProductButton = new Button();
         EditProductButton = new Button();
         AddProductButton = new Button();
         ProductDataGridView = new DataGridView();
+        ProductsColumnDeleteButton = new DataGridViewButtonColumn();
         WeightedItemCheckBox = new CheckBox();
         ProductPriceTextBox = new TextBox();
         ProductNameTextBox = new TextBox();
@@ -56,9 +55,10 @@ partial class MainForm
         ProductToAddComboBox = new ComboBox();
         BranchDetailsAddProductButton = new Button();
         BranchDetailsDataGridView = new DataGridView();
+        BranchDetailsRemoveButton = new DataGridViewButtonColumn();
         BranchComboBox = new ComboBox();
         sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
-        BranchDetailsRemoveButton = new DataGridViewButtonColumn();
+        BranchColumnDeleteButton = new DataGridViewButtonColumn();
         tabControl1.SuspendLayout();
         BranchesTab.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)BranchDataGridView).BeginInit();
@@ -84,7 +84,7 @@ partial class MainForm
         // 
         BranchesTab.Controls.Add(BranchesExportButton);
         BranchesTab.Controls.Add(BranchesImportButton);
-        BranchesTab.Controls.Add(DeleteBranchButton);
+        //BranchesTab.Controls.Add(DeleteBranchButton);
         BranchesTab.Controls.Add(EditBranchButton);
         BranchesTab.Controls.Add(AddBranchButton);
         BranchesTab.Controls.Add(BranchDataGridView);
@@ -120,16 +120,6 @@ partial class MainForm
         BranchesImportButton.UseVisualStyleBackColor = true;
         BranchesImportButton.Click += BranchesImportButton_Click;
         // 
-        // DeleteBranchButton
-        // 
-        DeleteBranchButton.Location = new Point(170, 35);
-        DeleteBranchButton.Name = "DeleteBranchButton";
-        DeleteBranchButton.Size = new Size(75, 23);
-        DeleteBranchButton.TabIndex = 6;
-        DeleteBranchButton.Text = "Delete";
-        DeleteBranchButton.UseVisualStyleBackColor = true;
-        DeleteBranchButton.Click += DeleteBranchButton_Click;
-        // 
         // EditBranchButton
         // 
         EditBranchButton.Location = new Point(89, 35);
@@ -154,6 +144,7 @@ partial class MainForm
         // 
         BranchDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         BranchDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        BranchDataGridView.Columns.AddRange(new DataGridViewColumn[] { BranchColumnDeleteButton });
         BranchDataGridView.Location = new Point(0, 64);
         BranchDataGridView.Name = "BranchDataGridView";
         BranchDataGridView.Size = new Size(785, 353);
@@ -187,7 +178,6 @@ partial class MainForm
         // 
         ProductsTab.Controls.Add(ProductExportButton);
         ProductsTab.Controls.Add(ProductsImportButton);
-        ProductsTab.Controls.Add(DeleteProductButton);
         ProductsTab.Controls.Add(EditProductButton);
         ProductsTab.Controls.Add(AddProductButton);
         ProductsTab.Controls.Add(ProductDataGridView);
@@ -222,16 +212,6 @@ partial class MainForm
         ProductsImportButton.UseVisualStyleBackColor = true;
         ProductsImportButton.Click += ProductsImportButton_Click;
         // 
-        // DeleteProductButton
-        // 
-        DeleteProductButton.Location = new Point(170, 35);
-        DeleteProductButton.Name = "DeleteProductButton";
-        DeleteProductButton.Size = new Size(75, 23);
-        DeleteProductButton.TabIndex = 6;
-        DeleteProductButton.Text = "Delete";
-        DeleteProductButton.UseVisualStyleBackColor = true;
-        DeleteProductButton.Click += DeleteProductButton_Click;
-        // 
         // EditProductButton
         // 
         EditProductButton.Location = new Point(89, 35);
@@ -256,11 +236,19 @@ partial class MainForm
         // 
         ProductDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         ProductDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        ProductDataGridView.Columns.AddRange(new DataGridViewColumn[] { ProductsColumnDeleteButton });
         ProductDataGridView.Location = new Point(0, 64);
         ProductDataGridView.Name = "ProductDataGridView";
         ProductDataGridView.Size = new Size(785, 353);
         ProductDataGridView.TabIndex = 3;
         ProductDataGridView.CellContentClick += ProductDataGridView_CellContentClick;
+        // 
+        // ProductsColumnDeleteButton
+        // 
+        ProductsColumnDeleteButton.HeaderText = "Delete Product";
+        ProductsColumnDeleteButton.Name = "ProductsColumnDeleteButton";
+        ProductsColumnDeleteButton.Text = "Delete";
+        ProductsColumnDeleteButton.UseColumnTextForButtonValue = true;
         // 
         // WeightedItemCheckBox
         // 
@@ -351,7 +339,14 @@ partial class MainForm
         BranchDetailsDataGridView.Name = "BranchDetailsDataGridView";
         BranchDetailsDataGridView.Size = new Size(785, 382);
         BranchDetailsDataGridView.TabIndex = 1;
-        BranchDetailsDataGridView.CellContentClick += BranchDetailsDataGridView_CellContentClick;
+        BranchDetailsDataGridView.CellContentClick += BranchDetailsDeleteColumnButton_CellContentClick;
+        // 
+        // BranchDetailsRemoveButton
+        // 
+        BranchDetailsRemoveButton.HeaderText = "Delete";
+        BranchDetailsRemoveButton.Name = "BranchDetailsRemoveButton";
+        BranchDetailsRemoveButton.Text = "Remove Product";
+        BranchDetailsRemoveButton.UseColumnTextForButtonValue = true;
         // 
         // BranchComboBox
         // 
@@ -368,12 +363,12 @@ partial class MainForm
         sqlCommand1.CommandTimeout = 30;
         sqlCommand1.EnableOptimizedParameterBinding = false;
         // 
-        // BranchDetailsRemoveButton
+        // BranchColumnDeleteButton
         // 
-        BranchDetailsRemoveButton.HeaderText = "Delete";
-        BranchDetailsRemoveButton.Name = "BranchDetailsRemoveButton";
-        BranchDetailsRemoveButton.Text = "Remove Product";
-        BranchDetailsRemoveButton.UseColumnTextForButtonValue = true;
+        BranchColumnDeleteButton.HeaderText = "Delete Branch";
+        BranchColumnDeleteButton.Name = "BranchColumnDeleteButton";
+        BranchColumnDeleteButton.Text = "Delete";
+        BranchColumnDeleteButton.UseColumnTextForButtonValue = true;
         // 
         // MainForm
         // 
@@ -409,7 +404,6 @@ partial class MainForm
     private DateTimePicker BranchOpenDatePicker;
     private TextBox ProductPriceTextBox;
     private TextBox ProductNameTextBox;
-    private Button DeleteProductButton;
     private Button EditProductButton;
     private Button AddProductButton;
     private DataGridView ProductDataGridView;
@@ -427,4 +421,6 @@ partial class MainForm
     private Button BranchDetailsExportButton;
     private Button BranchDetailsImportButton;
     private DataGridViewButtonColumn BranchDetailsRemoveButton;
+    private DataGridViewButtonColumn ProductsColumnDeleteButton;
+    private DataGridViewButtonColumn BranchColumnDeleteButton;
 }

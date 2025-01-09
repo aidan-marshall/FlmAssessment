@@ -22,7 +22,7 @@ namespace BranchProductApp.WinForms
                 {
                     ".csv" => CsvImporter.ParseCsvMappings(filePath),
                     ".json" => JsonParser.ParseMappingsJson(filePath),
-                    ".xml" => throw new NotImplementedException(),
+                    ".xml" => XmlParser.DeserializeMappingsXml(filePath),
                     _ => throw new NotSupportedException("File format not supported")
                 };
 
@@ -136,7 +136,7 @@ namespace BranchProductApp.WinForms
             }
         }
 
-        private async void BranchDetailsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void BranchDetailsDeleteColumnButton_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {

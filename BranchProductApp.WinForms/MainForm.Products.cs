@@ -1,10 +1,18 @@
 ﻿using BranchProductApp.Core.Parsers;
+using BranchProductApp.Core.Products;
 using Microsoft.Extensions.Logging;
 
 namespace BranchProductApp.WinForms
 {
     public partial class MainForm
     {
+        private async Task LoadProducts()
+        {
+            var products = await productService.GetProducts();
+            ProductDataGridView.DataSource = products.ToList();
+            ProductDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+        }
+
         private async void ProductsImportButton_Click(object sender, EventArgs e)
         {
             using var openFileDialog = new OpenFileDialog();
@@ -20,7 +28,7 @@ namespace BranchProductApp.WinForms
                 {
                     ".csv" => CsvImporter.ParseCsvForProducts(filePath),
                     ".json" => JsonParser.ParseProductsJson(filePath),
-                    ".xml" => throw new NotImplementedException(),
+                    ".xml" => XmlParser.DeserializeProductXml(filePath),
                     _ => throw new NotSupportedException("File format not supported")
                 };
 
@@ -70,6 +78,79 @@ namespace BranchProductApp.WinForms
                     }
                 }
             }
+        }
+
+        private async void ProductDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex == ProductDataGridView.Columns["ProductsColumnDeleteButton"]!.Index)
+            {
+                var confirmResult = MessageBox.Show("Are you sure you want to delete this product?",
+                                                     "Confirm Delete",
+                                                     MessageBoxButtons.YesNo,
+                                                     MessageBoxIcon.Warning);
+                if (confirmResult == DialogResult.Yes)
+                {
+                    var selectedProduct = ProductDataGridView.Rows[e.RowIndex].DataBoundItem as Product;
+                    if (selectedProduct != null)
+                    {
+                        await productService.DeleteProduct(selectedProduct.Id);
+
+                        await LoadProducts();
+                    }
+                }
+            }
+            else if (e.RowIndex >= 0)
+            {
+                var selectedProduct = ProductDataGridView.Rows[e.RowIndex].DataBoundItem as Product;
+                if (selectedProduct != null)
+                {
+                    ProductNameTextBox.Text = selectedProduct.Name;
+                    WeightedItemCheckBox.Checked = selectedProduct.WeightedItem;
+                    ProductPriceTextBox.Text = selectedProduct.SuggestedSellingPrice.ToString();
+                }
+            }
+        }
+
+        private async void AddProductButton_Click(object sender, EventArgs e)
+        {
+            if (decimal.TryParse(ProductPriceTextBox.Text, out decimal price))
+            {
+                var newProduct = new Product
+                {
+                    Name = ProductNameTextBox.Text,
+                    WeightedItem = WeightedItemCheckBox.Checked,
+                    SuggestedSellingPrice = price
+                };
+
+                await productService.CreateProduct(newProduct);
+                await LoadProducts();
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid price.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+        private async void EditProductButton_Click(object sender, EventArgs e)
+        {
+            var selectedProduct = ProductDataGridView.CurrentRow?.DataBoundItem as Product;
+
+            if (selectedProduct != null)
+            {
+                selectedProduct.Name = ProductNameTextBox.Text;
+                selectedProduct.WeightedItem = WeightedItemCheckBox.Checked;
+                selectedProduct.SuggestedSellingPrice = decimal.Parse(ProductPriceTextBox.Text);
+
+                await productService.UpdateProduct(selectedProduct);
+                await LoadProducts();
+            }
+        }
+
+        private void WeightedItemCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

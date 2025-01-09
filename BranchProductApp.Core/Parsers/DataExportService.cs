@@ -1,9 +1,5 @@
-﻿using BranchProductApp.Core.Branches;
-using BranchProductApp.Core.Products;
-using CsvHelper;
+﻿using CsvHelper;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Xml.Serialization;
 
