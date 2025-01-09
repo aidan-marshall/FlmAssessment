@@ -28,18 +28,6 @@ public partial class MainForm : Form
         await InitializeBranchDetails();
     }
 
-    private DialogResult ConfirmAction(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
-    {
-        return MessageBox.Show(message, title, buttons, icon);
-    }
 
-    private DialogResult Confirm(string action, string entity)
-    {
-        return ConfirmAction($"Are you sure you want to {action} this {entity}?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-    }
 
-    private void ProductNameTextBox_TextChanged(object sender, EventArgs e)
-    {
-
-    }
 }

@@ -275,7 +275,6 @@ partial class MainForm
         ProductNameTextBox.Size = new Size(100, 23);
         ProductNameTextBox.TabIndex = 0;
         ProductNameTextBox.Text = "Product name...";
-        ProductNameTextBox.TextChanged += ProductNameTextBox_TextChanged;
         // 
         // BranchDetailsTab
         // 

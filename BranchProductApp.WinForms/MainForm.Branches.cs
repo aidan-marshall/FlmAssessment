@@ -165,7 +165,7 @@ namespace BranchProductApp.WinForms
                 var selectedBranch = BranchDataGridView.Rows[rowIndex].DataBoundItem as Branch;
                 if (selectedBranch != null)
                 {
-                    var confirmResult = Confirm("delete", "branch");
+                    var confirmResult = Helpers.Helpers.Confirm("delete", "branch");
                     if (confirmResult == DialogResult.Yes)
                     {
                         await branchService.DeleteBranch(selectedBranch.Id);
@@ -187,7 +187,7 @@ namespace BranchProductApp.WinForms
                 var selectedBranch = BranchDataGridView.Rows[rowIndex].DataBoundItem as Branch;
                 if (selectedBranch != null)
                 {
-                    var confirmResult = Confirm("update", "branch");
+                    var confirmResult = Helpers.Helpers.Confirm("update", "branch");
                     if (confirmResult == DialogResult.Yes)
                     {
                         selectedBranch.Name = BranchNameTextBox.Text;
