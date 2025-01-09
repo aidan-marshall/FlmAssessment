@@ -12,3 +12,5 @@ RUN INIITIAL MIGRATIONS TO CREATE DATABASE AND TABLES.
 
 dotnet ef migrations add InitialCreate
 dotnet ef database update
+
+SELECT BranchProductApp.WinForms as startup project
