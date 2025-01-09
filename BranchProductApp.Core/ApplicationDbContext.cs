@@ -24,9 +24,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(pm => pm.BranchId);
 
         modelBuilder.Entity<ProductBranchMapping>()
-            .HasOne(pbm => pbm.Product)
+            .HasOne(pm => pm.Product)
             .WithMany(p => p.ProductBranchMappings)
-            .HasForeignKey(pbm => pbm.ProductId);
+            .HasForeignKey(pm => pm.ProductId);
 
         modelBuilder.Entity<Branch>()
             .Property(b => b.Id)
