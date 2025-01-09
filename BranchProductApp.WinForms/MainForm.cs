@@ -27,7 +27,4 @@ public partial class MainForm : Form
         await LoadProducts();
         await InitializeBranchDetails();
     }
-
-
-
 }
