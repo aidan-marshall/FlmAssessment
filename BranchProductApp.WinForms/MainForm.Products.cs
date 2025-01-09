@@ -27,7 +27,7 @@ namespace BranchProductApp.WinForms
             {
                 var products = fileExtension switch
                 {
-                    ".csv" => CsvImporter.ParseCsvForProducts(filePath),
+                    ".csv" => CsvImporter.ParseCsv(filePath, new ProductMap()),
                     ".json" => JsonParser.ParseProductsJson(filePath),
                     ".xml" => XmlParser.DeserializeProductXml(filePath),
                     _ => throw new NotSupportedException("File format not supported")
@@ -85,7 +85,7 @@ namespace BranchProductApp.WinForms
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == ProductDataGridView.Columns["ProductsColumnDeleteButton"]!.Index)
             {
-                var confirmResult = ConfirmAction("Are you sure you want to delete this branch?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var confirmResult = ConfirmAction("Are you sure you want to delete this product?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (confirmResult == DialogResult.Yes)
                 {

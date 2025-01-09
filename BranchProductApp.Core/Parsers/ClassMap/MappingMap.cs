@@ -3,7 +3,7 @@ using CsvHelper.Configuration;
 
 namespace BranchProductApp.Core.Parsers;
 
-internal sealed class MappingMap : ClassMap<ProductBranchMapping>
+public sealed class MappingMap : ClassMap<ProductBranchMapping>
 {
     public MappingMap()
     {

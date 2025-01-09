@@ -4,7 +4,7 @@ using CsvHelper.Configuration;
 
 namespace BranchProductApp.Core.Parsers;
 
-internal sealed class BranchMap : ClassMap<Branch>
+public sealed class BranchMap : ClassMap<Branch>
 {
     public BranchMap()
     {

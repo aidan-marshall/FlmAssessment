@@ -29,7 +29,7 @@ namespace BranchProductApp.WinForms
             {
                 var branches = fileExtension switch
                 {
-                    ".csv" => CsvImporter.ParseCsvForBranches(filePath) ,
+                    ".csv" => CsvImporter.ParseCsv(filePath, new BranchMap()),
                     ".json" => JsonParser.ParseBranchesJson(filePath),
                     ".xml" => XmlParser.DeserializeBranchXml(filePath),
                     _ => throw new NotSupportedException("File format not supported")
