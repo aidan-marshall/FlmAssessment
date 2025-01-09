@@ -46,7 +46,7 @@ namespace BranchProductApp.WinForms
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error importing branch details");
-                MessageBox.Show($"Error importing branch details: {ex.Message}");
+                MessageBox.Show($"Error importing branch details.");
             }
         }
 
@@ -82,20 +82,29 @@ namespace BranchProductApp.WinForms
                     string selectedFilePath = saveFileDialog.FileName;
                     var branchDetails = await productBranchMappingService.GetAllMappings();
 
-                    if (selectedFilePath.EndsWith(".csv"))
+                    try
                     {
-                        DataExportService.ExportToCsv(branchDetails, selectedFilePath);
-                    }
-                    else if (selectedFilePath.EndsWith(".json"))
-                    {
-                        DataExportService.ExportToJson(branchDetails, selectedFilePath);
-                    }
-                    else if (selectedFilePath.EndsWith(".xml"))
-                    {
-                        DataExportService.ExportToXml(branchDetails, selectedFilePath);
-                    }
 
-                    MessageBox.Show("Branch details have been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (selectedFilePath.EndsWith(".csv"))
+                        {
+                            DataExportService.ExportToCsv(branchDetails, selectedFilePath);
+                        }
+                        else if (selectedFilePath.EndsWith(".json"))
+                        {
+                            DataExportService.ExportToJson(branchDetails, selectedFilePath);
+                        }
+                        else if (selectedFilePath.EndsWith(".xml"))
+                        {
+                            DataExportService.ExportToXml(branchDetails, selectedFilePath);
+                        }
+
+                        MessageBox.Show("Branch details have been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch(Exception ex)
+                    {
+                        logger.LogError(ex, "Error exporting branch details");
+                        MessageBox.Show($"Error exporting branch details: {ex.Message}");
+                    }
                 }
             }
         }
@@ -118,22 +127,24 @@ namespace BranchProductApp.WinForms
 
         private async void BranchDetailsAddProductButton_Click(object sender, EventArgs e)
         {
-            if (BranchComboBox.SelectedValue is int selectedBranchId && ProductToAddComboBox.SelectedValue is int selectedProductId)
+            try
             {
-                try
+                if (BranchComboBox.SelectedValue is int selectedBranchId && ProductToAddComboBox.SelectedValue is int selectedProductId)
                 {
                     await productBranchMappingService.AssignProductToBranch(selectedBranchId, selectedProductId);
                     MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await LoadBranchProducts(selectedBranchId);
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a branch and a product.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Please select a branch and a product.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                logger.LogError(ex, "Error adding product to branch");
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -192,15 +203,23 @@ namespace BranchProductApp.WinForms
 
         private async Task LoadBranchProducts(int selectedBranchId)
         {
-            var branchProducts = await productBranchMappingService.GetProductsForBranch(selectedBranchId);
-            var allProducts = await productService.GetProducts();
-            var availableProducts = allProducts.Where(p => !branchProducts.Any(bp => bp.Id == p.Id)).ToList();
+            try
+            {
+                var branchProducts = await productBranchMappingService.GetProductsForBranch(selectedBranchId);
+                var allProducts = await productService.GetProducts();
+                var availableProducts = allProducts.Where(p => !branchProducts.Any(bp => bp.Id == p.Id)).ToList();
 
-            BranchDetailsDataGridView.DataSource = branchProducts.ToList();
-            BranchDetailsDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
-            ProductToAddComboBox.DataSource = availableProducts;
-            ProductToAddComboBox.DisplayMember = "Name";
-            ProductToAddComboBox.ValueMember = "Id";
+                BranchDetailsDataGridView.DataSource = branchProducts.ToList();
+                BranchDetailsDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+                ProductToAddComboBox.DataSource = availableProducts;
+                ProductToAddComboBox.DisplayMember = "Name";
+                ProductToAddComboBox.ValueMember = "Id";
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error loading branch products");
+                MessageBox.Show($"Error loading branch products: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async Task InitializeBranchDetails()
@@ -223,10 +242,6 @@ namespace BranchProductApp.WinForms
                 logger.LogError(ex, "Error initializing branch details");
                 MessageBox.Show("Error initializing branch details: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void BranchDetailsTab_Click(object sender, EventArgs e)
-        {
         }
     }
 }

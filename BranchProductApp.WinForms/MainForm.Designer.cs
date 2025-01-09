@@ -96,7 +96,6 @@ partial class MainForm
         BranchesTab.TabIndex = 0;
         BranchesTab.Text = "Branches";
         BranchesTab.UseVisualStyleBackColor = true;
-        BranchesTab.Click += BranchesTab_Click;
         // 
         // BranchesExportButton
         // 
@@ -170,7 +169,6 @@ partial class MainForm
         BranchTelephoneTextBox.Size = new Size(127, 23);
         BranchTelephoneTextBox.TabIndex = 1;
         BranchTelephoneTextBox.Text = "Enter contact number...";
-        BranchTelephoneTextBox.TextChanged += BranchTelephoneTextBox_TextChanged;
         // 
         // BranchNameTextBox
         // 
@@ -179,7 +177,6 @@ partial class MainForm
         BranchNameTextBox.Size = new Size(129, 23);
         BranchNameTextBox.TabIndex = 0;
         BranchNameTextBox.Text = "Enter branch name...";
-        BranchNameTextBox.TextChanged += BranchNameTextBox_TextChanged;
         // 
         // ProductsTab
         // 
@@ -262,7 +259,6 @@ partial class MainForm
         WeightedItemCheckBox.TabIndex = 2;
         WeightedItemCheckBox.Text = "WeightedItem";
         WeightedItemCheckBox.UseVisualStyleBackColor = true;
-        WeightedItemCheckBox.CheckedChanged += WeightedItemCheckBox_CheckedChanged;
         // 
         // ProductPriceTextBox
         // 
@@ -296,7 +292,6 @@ partial class MainForm
         BranchDetailsTab.TabIndex = 2;
         BranchDetailsTab.Text = "Branch Details";
         BranchDetailsTab.UseVisualStyleBackColor = true;
-        BranchDetailsTab.Click += BranchDetailsTab_Click;
         // 
         // BranchDetailsExportButton
         // 

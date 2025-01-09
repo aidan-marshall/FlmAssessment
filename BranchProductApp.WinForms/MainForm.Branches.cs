@@ -1,6 +1,6 @@
 ﻿using BranchProductApp.Core.Parsers;
 using BranchProductApp.Core.Branches;
-using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace BranchProductApp.WinForms
 {
@@ -8,19 +8,27 @@ namespace BranchProductApp.WinForms
     {
         private async Task LoadBranches()
         {
-            var branches = await branchService.GetBranches();
-
-            if (!branches.Any())
+            try
             {
-                BranchComboBox.Text = "No branches available...";
-                ProductToAddComboBox.DataSource = null;
-            }
+                var branches = await branchService.GetBranches();
 
-            BranchDataGridView.DataSource = branches.ToList();
-            BranchDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
-            BranchComboBox.DataSource = branches.ToList();
-            BranchComboBox.DisplayMember = "Name";
-            BranchComboBox.ValueMember = "Id";
+                if (!branches.Any())
+                {
+                    BranchComboBox.Text = "No branches available...";
+                    ProductToAddComboBox.DataSource = null;
+                }
+
+                BranchDataGridView.DataSource = branches.ToList();
+                BranchDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+                BranchComboBox.DataSource = branches.ToList();
+                BranchComboBox.DisplayMember = "Name";
+                BranchComboBox.ValueMember = "Id";
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error loading branches");
+                MessageBox.Show("Error loading branches: Something went wrong");
+            }
         }
 
         private async void BranchesImportButton_Click(object sender, EventArgs e)
@@ -60,122 +68,142 @@ namespace BranchProductApp.WinForms
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string selectedFilePath = saveFileDialog.FileName;
-                    var branches = await branchService.GetBranches();
 
-                    if (selectedFilePath.EndsWith(".csv"))
+                    try
                     {
-                        DataExportService.ExportToCsv(branches, selectedFilePath);
-                    }
-                    else if (selectedFilePath.EndsWith(".json"))
-                    {
-                        DataExportService.ExportToJson(branches, selectedFilePath);
-                    }
-                    else if (selectedFilePath.EndsWith(".xml"))
-                    {
-                        var branchDtos = DataExportService.MapBranchesToDtos(branches);
-                        DataExportService.ExportToXml(branchDtos, selectedFilePath);
-                    }
+                        var branches = await branchService.GetBranches();
 
-                    MessageBox.Show("Branches data has been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (selectedFilePath.EndsWith(".csv"))
+                        {
+                            DataExportService.ExportToCsv(branches, selectedFilePath);
+                        }
+                        else if (selectedFilePath.EndsWith(".json"))
+                        {
+                            DataExportService.ExportToJson(branches, selectedFilePath);
+                        }
+                        else if (selectedFilePath.EndsWith(".xml"))
+                        {
+                            var branchDtos = DataExportService.MapBranchesToDtos(branches);
+                            DataExportService.ExportToXml(branchDtos, selectedFilePath);
+                        }
+
+                        MessageBox.Show("Branches data has been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Error exporting data to file: {FilePath}", selectedFilePath);
+                        MessageBox.Show($"Error exporting data: {ex.Message}");
+                    }
                 }
             }
         }
 
         private async void AddBranchButton_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(BranchNameTextBox.Text))
+            try
             {
-                MessageBox.Show("Please enter a branch name.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (string.IsNullOrWhiteSpace(BranchNameTextBox.Text))
+                {
+                    MessageBox.Show("Please enter a branch name.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(BranchTelephoneTextBox.Text))
+                {
+                    MessageBox.Show("Please enter a telephone number for the branch.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (BranchOpenDatePicker.Value == DateTime.Now)
+                {
+                    MessageBox.Show("Please select a valid open date for the branch.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (!Helpers.Helpers.IsValidPhoneNumber(BranchTelephoneTextBox.Text))
+                {
+                    MessageBox.Show("Please enter a valid telephone number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var newBranch = new Branch
+                {
+                    Name = BranchNameTextBox.Text,
+                    TelephoneNumber = BranchTelephoneTextBox.Text,
+                    OpenDate = BranchOpenDatePicker.Value
+                };
+
+                await branchService.CreateBranch(newBranch);
+                await LoadBranches();
             }
-
-            if (string.IsNullOrWhiteSpace(BranchTelephoneTextBox.Text))
+            catch (Exception ex)
             {
-                MessageBox.Show("Please enter a telephone number for the branch.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                logger.LogError(ex, "Error adding branch: {BranchName}", BranchNameTextBox.Text);
+                MessageBox.Show("Error adding branch: Something went wrong.");
             }
-
-            if (BranchOpenDatePicker.Value == DateTime.Now)
-            {
-                MessageBox.Show("Please select a valid open date for the branch.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Regex to ensure the telephone number contains only digits (allowing spaces, dashes, or parentheses for formatting)
-            var phoneRegex = new Regex(@"^\+?(\d[\d\- ]{7,}\d$)");
-            if (!phoneRegex.IsMatch(BranchTelephoneTextBox.Text))
-            {
-                MessageBox.Show("Please enter a valid telephone number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var newBranch = new Branch
-            {
-                Name = BranchNameTextBox.Text,
-                TelephoneNumber = BranchTelephoneTextBox.Text,
-                OpenDate = BranchOpenDatePicker.Value
-            };
-
-            await branchService.CreateBranch(newBranch);
-            await LoadBranches();
         }
 
         private async void BranchDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
-            if (e.RowIndex >= 0 && e.ColumnIndex == BranchDataGridView.Columns["BranchColumnDeleteButton"]!.Index)
+            if (e.RowIndex >= 0)
             {
-                var confirmResult = Confirm("delete", "branch");
-
-                if (confirmResult == DialogResult.Yes)
+                if (e.ColumnIndex == BranchDataGridView.Columns["BranchColumnDeleteButton"]!.Index)
                 {
-                    var selectedBranch = BranchDataGridView.Rows[e.RowIndex].DataBoundItem as Branch;
-                    if (selectedBranch != null)
+                    await HandleBranchDelete(e.RowIndex);
+                }
+                else if (e.ColumnIndex == BranchDataGridView.Columns["BranchColumnUpdateButton"]!.Index)
+                {
+                    await HandleBranchUpdate(e.RowIndex);
+                }
+            }
+        }
+
+        private async Task HandleBranchDelete(int rowIndex)
+        {
+            try
+            {
+                var selectedBranch = BranchDataGridView.Rows[rowIndex].DataBoundItem as Branch;
+                if (selectedBranch != null)
+                {
+                    var confirmResult = Confirm("delete", "branch");
+                    if (confirmResult == DialogResult.Yes)
                     {
                         await branchService.DeleteBranch(selectedBranch.Id);
                         await LoadBranches();
                     }
                 }
             }
-            else if (e.RowIndex >= 0 && e.ColumnIndex == BranchDataGridView.Columns["BranchColumnUpdateButton"]!.Index)
+            catch (Exception ex)
             {
-                var selectedBranch = BranchDataGridView.Rows[e.RowIndex].DataBoundItem as Branch;
+                logger.LogError(ex, "Error deleting branch");
+                MessageBox.Show("Error deleting branch: Something went wrong.");
+            }
+        }
+
+        private async Task HandleBranchUpdate(int rowIndex)
+        {
+            try
+            {
+                var selectedBranch = BranchDataGridView.Rows[rowIndex].DataBoundItem as Branch;
                 if (selectedBranch != null)
                 {
                     var confirmResult = Confirm("update", "branch");
-
-
                     if (confirmResult == DialogResult.Yes)
                     {
-                        if (!string.IsNullOrEmpty(BranchNameTextBox.Text))
-                            selectedBranch.Name = BranchNameTextBox.Text;
-
-                        if (!string.IsNullOrEmpty(BranchTelephoneTextBox.Text))
-                            selectedBranch.TelephoneNumber = BranchTelephoneTextBox.Text;
-
-                        if (BranchOpenDatePicker.Value != DateTime.Now)
-                            selectedBranch.OpenDate = BranchOpenDatePicker.Value;
+                        selectedBranch.Name = BranchNameTextBox.Text;
+                        selectedBranch.TelephoneNumber = BranchTelephoneTextBox.Text;
+                        selectedBranch.OpenDate = BranchOpenDatePicker.Value;
 
                         await branchService.UpdateBranch(selectedBranch);
                         await LoadBranches();
                     }
                 }
             }
-        }
-
-        private void BranchesTab_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BranchNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BranchTelephoneTextBox_TextChanged(object sender, EventArgs e)
-        {
-
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error updating branch");
+                MessageBox.Show("Error updating branch: Something went wrong.");
+            }
         }
     }
 }

@@ -9,9 +9,16 @@ namespace BranchProductApp.WinForms
     {
         private async Task LoadProducts()
         {
-            var products = await productService.GetProducts();
-            ProductDataGridView.DataSource = products.ToList();
-            ProductDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+            try
+            {
+                var products = await productService.GetProducts();
+                ProductDataGridView.DataSource = products.ToList();
+                ProductDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error loading products.");
+            }
         }
 
         private async void ProductsImportButton_Click(object sender, EventArgs e)
@@ -36,6 +43,11 @@ namespace BranchProductApp.WinForms
                 await productService.AddProducts(products);
                 await LoadProducts();
                 MessageBox.Show("Data imported successfully!");
+            }
+            catch (NotSupportedException ex)
+            {
+                logger.LogWarning(ex, "Unsupported file format: {FilePath}", filePath);
+                MessageBox.Show($"Error importing data: Unsupported file format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -92,16 +104,24 @@ namespace BranchProductApp.WinForms
                     var selectedProduct = ProductDataGridView.Rows[e.RowIndex].DataBoundItem as Product;
                     if (selectedProduct != null)
                     {
-                        await productService.DeleteProduct(selectedProduct.Id);
-
-                        await LoadProducts();
-
-                        var selectedBranchId = GetSelectedBranchId();
-                        if (selectedBranchId == -1)
+                        try
                         {
-                            return;
+                            await productService.DeleteProduct(selectedProduct.Id);
+
+                            await LoadProducts();
+
+                            var selectedBranchId = GetSelectedBranchId();
+                            if (selectedBranchId == -1)
+                            {
+                                return;
+                            }
+                            await LoadBranchProducts(selectedBranchId);
                         }
-                        await LoadBranchProducts(selectedBranchId);
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, "Error deleting product: {ProductId}", selectedProduct.Id);
+                            MessageBox.Show($"Error deleting product: Something went wrong.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
@@ -115,17 +135,25 @@ namespace BranchProductApp.WinForms
 
                     if (confirmResult == DialogResult.Yes)
                     {
-                        if (!string.IsNullOrEmpty(ProductNameTextBox.Text))
-                            selectedProduct.Name = ProductNameTextBox.Text;
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(ProductNameTextBox.Text))
+                                selectedProduct.Name = ProductNameTextBox.Text;
 
-                        if (WeightedItemCheckBox.Checked != selectedProduct.WeightedItem)
-                            selectedProduct.WeightedItem = WeightedItemCheckBox.Checked;
+                            if (WeightedItemCheckBox.Checked != selectedProduct.WeightedItem)
+                                selectedProduct.WeightedItem = WeightedItemCheckBox.Checked;
 
-                        if (decimal.TryParse(ProductPriceTextBox.Text, out var price) && price != selectedProduct.SuggestedSellingPrice)
-                            selectedProduct.SuggestedSellingPrice = price;
+                            if (decimal.TryParse(ProductPriceTextBox.Text, CultureInfo.InvariantCulture, out var price) && price != selectedProduct.SuggestedSellingPrice)
+                                selectedProduct.SuggestedSellingPrice = price;
 
-                        await productService.UpdateProduct(selectedProduct);
-                        await LoadProducts();
+                            await productService.UpdateProduct(selectedProduct);
+                            await LoadProducts();
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, "Error updating product: {ProductId}", selectedProduct.Id);
+                            MessageBox.Show($"Error updating product: Something went wrong.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
@@ -155,30 +183,16 @@ namespace BranchProductApp.WinForms
                 SuggestedSellingPrice = price
             };
 
-            await productService.CreateProduct(newProduct);
-            await LoadProducts();
-        }
-
-
-
-        private async void EditProductButton_Click(object sender, EventArgs e)
-        {
-            var selectedProduct = ProductDataGridView.CurrentRow?.DataBoundItem as Product;
-
-            if (selectedProduct != null)
+            try
             {
-                selectedProduct.Name = ProductNameTextBox.Text;
-                selectedProduct.WeightedItem = WeightedItemCheckBox.Checked;
-                selectedProduct.SuggestedSellingPrice = decimal.Parse(ProductPriceTextBox.Text);
-
-                await productService.UpdateProduct(selectedProduct);
+                await productService.CreateProduct(newProduct);
                 await LoadProducts();
             }
-        }
-
-        private void WeightedItemCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error creating product: {ProductName}", newProduct.Name);
+                MessageBox.Show($"Error creating product: Something went wrong.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
