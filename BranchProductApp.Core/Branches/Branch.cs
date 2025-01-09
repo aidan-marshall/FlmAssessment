@@ -12,8 +12,9 @@ public class Branch
     public string Name { get; set; }
     [XmlAttribute("TelephoneNumber")]
     public string? TelephoneNumber { get; set; }
-    [XmlIgnore]
+    [XmlAttribute("OpenDate")]
     public DateTime? OpenDate { get; set; }
+
     [XmlIgnore]
     [JsonIgnore]
     public ICollection<ProductBranchMapping> ProductBranchMappings { get; set; }

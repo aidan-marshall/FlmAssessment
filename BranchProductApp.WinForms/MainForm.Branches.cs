@@ -9,6 +9,13 @@ namespace BranchProductApp.WinForms
         private async Task LoadBranches()
         {
             var branches = await branchService.GetBranches();
+
+            if (!branches.Any())
+            {
+                BranchComboBox.Text = "No branches available...";
+                ProductToAddComboBox.DataSource = null;
+            }
+
             BranchDataGridView.DataSource = branches.ToList();
             BranchDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
             BranchComboBox.DataSource = branches.ToList();
@@ -65,7 +72,8 @@ namespace BranchProductApp.WinForms
                     }
                     else if (selectedFilePath.EndsWith(".xml"))
                     {
-                        DataExportService.ExportToXml(branches, selectedFilePath);
+                        var branchDtos = DataExportService.MapBranchesToDtos(branches);
+                        DataExportService.ExportToXml(branchDtos, selectedFilePath);
                     }
 
                     MessageBox.Show("Branches data has been successfully exported.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -125,7 +133,6 @@ namespace BranchProductApp.WinForms
                     if (selectedBranch != null)
                     {
                         await branchService.DeleteBranch(selectedBranch.Id);
-
                         await LoadBranches();
                     }
                 }

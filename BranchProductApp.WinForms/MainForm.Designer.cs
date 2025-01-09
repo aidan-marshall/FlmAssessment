@@ -296,6 +296,7 @@ partial class MainForm
         BranchDetailsTab.TabIndex = 2;
         BranchDetailsTab.Text = "Branch Details";
         BranchDetailsTab.UseVisualStyleBackColor = true;
+        BranchDetailsTab.Click += BranchDetailsTab_Click;
         // 
         // BranchDetailsExportButton
         // 

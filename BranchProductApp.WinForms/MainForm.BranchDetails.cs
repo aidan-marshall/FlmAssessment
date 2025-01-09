@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using BranchProductApp.Core.ProductBranchMappings;
 using BranchProductApp.Core.Products;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BranchProductApp.WinForms
 {
@@ -208,18 +209,24 @@ namespace BranchProductApp.WinForms
             {
                 var branches = await branchService.GetBranches();
 
-                if (branches.Any())
+                if (!branches.Any())
                 {
-                    var firstBranch = branches.First();
-                    BranchComboBox.SelectedValue = firstBranch.Id;
-                    await LoadBranchProducts(firstBranch.Id);
+                    return;
                 }
+              
+                var firstBranch = branches.First();
+                BranchComboBox.SelectedValue = firstBranch.Id;
+                await LoadBranchProducts(firstBranch.Id);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error initializing branch details");
                 MessageBox.Show("Error initializing branch details: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void BranchDetailsTab_Click(object sender, EventArgs e)
+        {
         }
     }
 }

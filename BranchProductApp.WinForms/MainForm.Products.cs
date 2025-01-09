@@ -95,6 +95,13 @@ namespace BranchProductApp.WinForms
                         await productService.DeleteProduct(selectedProduct.Id);
 
                         await LoadProducts();
+
+                        var selectedBranchId = GetSelectedBranchId();
+                        if (selectedBranchId == -1)
+                        {
+                            return;
+                        }
+                        await LoadBranchProducts(selectedBranchId);
                     }
                 }
             }
