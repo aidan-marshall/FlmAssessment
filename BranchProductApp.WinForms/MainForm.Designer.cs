@@ -55,8 +55,8 @@ partial class MainForm
         BranchDetailsImportButton = new Button();
         ProductToAddComboBox = new ComboBox();
         BranchDetailsAddProductButton = new Button();
-        BranchDetailsDeleteButton = new Button();
         BranchDetailsDataGridView = new DataGridView();
+        BranchDetailsRemoveButton = new DataGridViewButtonColumn();
         BranchComboBox = new ComboBox();
         sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
         tabControl1.SuspendLayout();
@@ -293,7 +293,6 @@ partial class MainForm
         BranchDetailsTab.Controls.Add(BranchDetailsImportButton);
         BranchDetailsTab.Controls.Add(ProductToAddComboBox);
         BranchDetailsTab.Controls.Add(BranchDetailsAddProductButton);
-        BranchDetailsTab.Controls.Add(BranchDetailsDeleteButton);
         BranchDetailsTab.Controls.Add(BranchDetailsDataGridView);
         BranchDetailsTab.Controls.Add(BranchComboBox);
         BranchDetailsTab.Location = new Point(4, 24);
@@ -327,7 +326,7 @@ partial class MainForm
         // ProductToAddComboBox
         // 
         ProductToAddComboBox.FormattingEnabled = true;
-        ProductToAddComboBox.Location = new Point(222, 6);
+        ProductToAddComboBox.Location = new Point(154, 6);
         ProductToAddComboBox.Name = "ProductToAddComboBox";
         ProductToAddComboBox.Size = new Size(143, 23);
         ProductToAddComboBox.TabIndex = 4;
@@ -335,7 +334,7 @@ partial class MainForm
         // 
         // BranchDetailsAddProductButton
         // 
-        BranchDetailsAddProductButton.Location = new Point(371, 6);
+        BranchDetailsAddProductButton.Location = new Point(303, 6);
         BranchDetailsAddProductButton.Name = "BranchDetailsAddProductButton";
         BranchDetailsAddProductButton.Size = new Size(86, 23);
         BranchDetailsAddProductButton.TabIndex = 3;
@@ -343,25 +342,21 @@ partial class MainForm
         BranchDetailsAddProductButton.UseVisualStyleBackColor = true;
         BranchDetailsAddProductButton.Click += BranchDetailsAddProductButton_Click;
         // 
-        // BranchDetailsDeleteButton
-        // 
-        BranchDetailsDeleteButton.Location = new Point(130, 6);
-        BranchDetailsDeleteButton.Name = "BranchDetailsDeleteButton";
-        BranchDetailsDeleteButton.Size = new Size(75, 23);
-        BranchDetailsDeleteButton.TabIndex = 2;
-        BranchDetailsDeleteButton.Text = "Delete ";
-        BranchDetailsDeleteButton.UseVisualStyleBackColor = true;
-        BranchDetailsDeleteButton.Click += BranchDetailsDeleteButton_Click;
-        // 
         // BranchDetailsDataGridView
         // 
         BranchDetailsDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         BranchDetailsDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        BranchDetailsDataGridView.Columns.AddRange(new DataGridViewColumn[] { BranchDetailsRemoveButton });
         BranchDetailsDataGridView.Location = new Point(0, 35);
         BranchDetailsDataGridView.Name = "BranchDetailsDataGridView";
         BranchDetailsDataGridView.Size = new Size(785, 382);
         BranchDetailsDataGridView.TabIndex = 1;
         BranchDetailsDataGridView.CellContentClick += BranchDetailsDataGridView_CellContentClick;
+        // 
+        // BranchDetailsRemoveButton
+        // 
+        BranchDetailsRemoveButton.HeaderText = "Delete";
+        BranchDetailsRemoveButton.Name = "BranchDetailsRemoveButton";
         // 
         // BranchComboBox
         // 
@@ -420,7 +415,6 @@ partial class MainForm
     private TabPage BranchDetailsTab;
     private DataGridView BranchDetailsDataGridView;
     private ComboBox BranchComboBox;
-    private Button BranchDetailsDeleteButton;
     private Button BranchDetailsAddProductButton;
     private ComboBox ProductToAddComboBox;
     private Button BranchesExportButton;
@@ -430,4 +424,5 @@ partial class MainForm
     private Button ProductsImportButton;
     private Button BranchDetailsExportButton;
     private Button BranchDetailsImportButton;
+    private DataGridViewButtonColumn BranchDetailsRemoveButton;
 }

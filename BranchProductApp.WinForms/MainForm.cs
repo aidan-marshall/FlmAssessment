@@ -25,6 +25,7 @@ public partial class MainForm : Form
         base.OnLoad(e);
         await LoadBranches();
         await LoadProducts();
+        await InitializeBranchDetails();
     }
 
     private async Task LoadBranches()
@@ -174,37 +175,6 @@ public partial class MainForm : Form
     {
 
     }
-
-    private async void BranchComboBox_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (BranchComboBox.SelectedValue != null)
-        {
-            if (BranchComboBox.SelectedValue is int selectedBranchId)
-            {
-                await LoadBranchProducts(selectedBranchId);
-            }
-        }
-    }
-
-    private async Task LoadBranchProducts(int selectedBranchId)
-    {
-        var branchProducts = await productBranchMappingService.GetProductsForBranch(selectedBranchId);
-        var allProducts = await productService.GetProducts();
-        var availableProducts = allProducts.Where(p => !branchProducts.Any(bp => bp.Id == p.Id)).ToList();
-
-        BranchDetailsDataGridView.DataSource = branchProducts.ToList();
-        BranchDetailsDataGridView.Columns["ProductBranchMappings"]!.Visible = false;
-        ProductToAddComboBox.DataSource = availableProducts;
-        ProductToAddComboBox.DisplayMember = "Name";
-        ProductToAddComboBox.ValueMember = "Id";
-    }
-
-    private void BranchDetailsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-
-    }
-
-
 
 
 }
