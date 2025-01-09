@@ -1,5 +1,6 @@
 ﻿using BranchProductApp.Core.Parsers;
 using BranchProductApp.Core.Branches;
+using System.Text.RegularExpressions;
 
 namespace BranchProductApp.WinForms
 {
@@ -74,6 +75,32 @@ namespace BranchProductApp.WinForms
 
         private async void AddBranchButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(BranchNameTextBox.Text))
+            {
+                MessageBox.Show("Please enter a branch name.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(BranchTelephoneTextBox.Text))
+            {
+                MessageBox.Show("Please enter a telephone number for the branch.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (BranchOpenDatePicker.Value == DateTime.Now)
+            {
+                MessageBox.Show("Please select a valid open date for the branch.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Regex to ensure the telephone number contains only digits (allowing spaces, dashes, or parentheses for formatting)
+            var phoneRegex = new Regex(@"^\+?(\d[\d\- ]{7,}\d$)");
+            if (!phoneRegex.IsMatch(BranchTelephoneTextBox.Text))
+            {
+                MessageBox.Show("Please enter a valid telephone number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var newBranch = new Branch
             {
                 Name = BranchNameTextBox.Text,
@@ -88,12 +115,10 @@ namespace BranchProductApp.WinForms
         private async void BranchDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
-            if (e.RowIndex >= 0 && e.ColumnIndex == BranchDataGridView.Columns["BranchColumnDeleteButton"].Index)
+            if (e.RowIndex >= 0 && e.ColumnIndex == BranchDataGridView.Columns["BranchColumnDeleteButton"]!.Index)
             {
-                var confirmResult = MessageBox.Show("Are you sure you want to delete this branch?",
-                                                     "Confirm Delete",
-                                                     MessageBoxButtons.YesNo,
-                                                     MessageBoxIcon.Warning);
+                var confirmResult = ConfirmDelete();
+
                 if (confirmResult == DialogResult.Yes)
                 {
                     var selectedBranch = BranchDataGridView.Rows[e.RowIndex].DataBoundItem as Branch;
@@ -105,28 +130,29 @@ namespace BranchProductApp.WinForms
                     }
                 }
             }
-            else if (e.RowIndex >= 0)
+            else if (e.RowIndex >= 0 && e.ColumnIndex == BranchDataGridView.Columns["BranchColumnUpdateButton"]!.Index)
             {
                 var selectedBranch = BranchDataGridView.Rows[e.RowIndex].DataBoundItem as Branch;
                 if (selectedBranch != null)
                 {
-                    BranchNameTextBox.Text = selectedBranch.Name;
-                    BranchTelephoneTextBox.Text = selectedBranch.TelephoneNumber;
-                    BranchOpenDatePicker.Value = selectedBranch.OpenDate ?? DateTime.Now;
-                }
-            }
-        }
+                    var confirmResult = ConfirmUpdate();
 
-        private async void EditBranchButton_Click(object sender, EventArgs e)
-        {
-            var selectedBranch = BranchDataGridView.CurrentRow?.DataBoundItem as Branch;
-            if (selectedBranch != null)
-            {
-                selectedBranch.Name = BranchNameTextBox.Text;
-                selectedBranch.TelephoneNumber = BranchTelephoneTextBox.Text;
-                selectedBranch.OpenDate = BranchOpenDatePicker.Value;
-                await branchService.UpdateBranch(selectedBranch);
-                await LoadBranches();
+
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        if (!string.IsNullOrEmpty(BranchNameTextBox.Text))
+                            selectedBranch.Name = BranchNameTextBox.Text;
+
+                        if (!string.IsNullOrEmpty(BranchTelephoneTextBox.Text))
+                            selectedBranch.TelephoneNumber = BranchTelephoneTextBox.Text;
+
+                        if (BranchOpenDatePicker.Value != DateTime.Now)
+                            selectedBranch.OpenDate = BranchOpenDatePicker.Value;
+
+                        await branchService.UpdateBranch(selectedBranch);
+                        await LoadBranches();
+                    }
+                }
             }
         }
 

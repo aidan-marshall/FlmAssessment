@@ -27,4 +27,29 @@ public partial class MainForm : Form
         await LoadProducts();
         await InitializeBranchDetails();
     }
+
+    private DialogResult ConfirmAction(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
+    {
+        return MessageBox.Show(message, title, buttons, icon);
+    }
+
+    private DialogResult ConfirmDelete()
+    {
+        return ConfirmAction("Are you sure you want to delete this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+    }
+
+    private DialogResult ConfirmUpdate()
+    {
+        return ConfirmAction("Are you sure you want to update this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+    }
+
+    private DialogResult ConfirmCreate()
+    {
+        return ConfirmAction("Are you sure you want to create this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+    }
+
+    private void ProductNameTextBox_TextChanged(object sender, EventArgs e)
+    {
+
+    }
 }

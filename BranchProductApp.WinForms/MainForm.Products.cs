@@ -1,6 +1,7 @@
 ﻿using BranchProductApp.Core.Parsers;
 using BranchProductApp.Core.Products;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace BranchProductApp.WinForms
 {
@@ -39,7 +40,7 @@ namespace BranchProductApp.WinForms
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error importing data from file: {FilePath}", filePath);
-                MessageBox.Show($"Error importing data: {ex.Message}");
+                MessageBox.Show($"Error importing data: Something went wrong");
             }
         }
 
@@ -74,7 +75,7 @@ namespace BranchProductApp.WinForms
                     catch (Exception ex)
                     {
                         logger.LogError(ex, "Error exporting data to file: {FilePath}", selectedFilePath);
-                        MessageBox.Show($"Error exporting data: {ex.Message}");
+                        MessageBox.Show($"Error exporting data: Something went wrong.");
                     }
                 }
             }
@@ -84,10 +85,8 @@ namespace BranchProductApp.WinForms
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == ProductDataGridView.Columns["ProductsColumnDeleteButton"]!.Index)
             {
-                var confirmResult = MessageBox.Show("Are you sure you want to delete this product?",
-                                                     "Confirm Delete",
-                                                     MessageBoxButtons.YesNo,
-                                                     MessageBoxIcon.Warning);
+                var confirmResult = ConfirmAction("Are you sure you want to delete this branch?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
                 if (confirmResult == DialogResult.Yes)
                 {
                     var selectedProduct = ProductDataGridView.Rows[e.RowIndex].DataBoundItem as Product;
@@ -99,36 +98,58 @@ namespace BranchProductApp.WinForms
                     }
                 }
             }
-            else if (e.RowIndex >= 0)
+            else if (e.RowIndex >= 0 && e.ColumnIndex == ProductDataGridView.Columns["ProductsColumnUpdateButton"]!.Index)
             {
                 var selectedProduct = ProductDataGridView.Rows[e.RowIndex].DataBoundItem as Product;
                 if (selectedProduct != null)
                 {
-                    ProductNameTextBox.Text = selectedProduct.Name;
-                    WeightedItemCheckBox.Checked = selectedProduct.WeightedItem;
-                    ProductPriceTextBox.Text = selectedProduct.SuggestedSellingPrice.ToString();
+                    var confirmResult = ConfirmUpdate();
+
+
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        if (!string.IsNullOrEmpty(ProductNameTextBox.Text))
+                            selectedProduct.Name = ProductNameTextBox.Text;
+
+                        if (WeightedItemCheckBox.Checked != selectedProduct.WeightedItem)
+                            selectedProduct.WeightedItem = WeightedItemCheckBox.Checked;
+
+                        if (decimal.TryParse(ProductPriceTextBox.Text, out var price) && price != selectedProduct.SuggestedSellingPrice)
+                            selectedProduct.SuggestedSellingPrice = price;
+
+                        await productService.UpdateProduct(selectedProduct);
+                        await LoadProducts();
+                    }
                 }
             }
         }
 
         private async void AddProductButton_Click(object sender, EventArgs e)
         {
-            if (decimal.TryParse(ProductPriceTextBox.Text, out decimal price))
+            if (string.IsNullOrWhiteSpace(ProductNameTextBox.Text))
             {
-                var newProduct = new Product
-                {
-                    Name = ProductNameTextBox.Text,
-                    WeightedItem = WeightedItemCheckBox.Checked,
-                    SuggestedSellingPrice = price
-                };
-
-                await productService.CreateProduct(newProduct);
-                await LoadProducts();
+                MessageBox.Show("Please enter a product name.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
+
+            if (!decimal.TryParse(ProductPriceTextBox.Text,
+                          NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands,
+                          CultureInfo.InvariantCulture,
+                          out decimal price))
             {
                 MessageBox.Show("Please enter a valid price.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            var newProduct = new Product
+            {
+                Name = ProductNameTextBox.Text,
+                WeightedItem = WeightedItemCheckBox.Checked,
+                SuggestedSellingPrice = price
+            };
+
+            await productService.CreateProduct(newProduct);
+            await LoadProducts();
         }
 
 
