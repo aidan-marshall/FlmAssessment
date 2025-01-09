@@ -5,7 +5,6 @@ using BranchProductApp.Core.Branches;
 using BranchProductApp.Core.Products;
 using BranchProductApp.Core.ProductBranchMappings;
 using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace BranchProductApp.WinForms;
 
@@ -31,6 +30,7 @@ static class Program
 
         services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer("Server=localhost;Database=BranchProductDb2;Trusted_Connection=True;TrustServerCertificate=True"));
+
 
         services.AddTransient<IBranchService, BranchService>();
         services.AddTransient<IProductService, ProductService>();
