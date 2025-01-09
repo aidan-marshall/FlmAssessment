@@ -29,7 +29,7 @@ namespace BranchProductApp.WinForms
                 {
                     ".csv" => CsvImporter.ParseCsv(filePath, new ProductMap()),
                     ".json" => JsonImporter.ParseProductsJson(filePath),
-                    ".xml" => XmlParser.DeserializeProductXml(filePath),
+                    ".xml" => XmlImporter.DeserializeProductXml(filePath),
                     _ => throw new NotSupportedException("File format not supported")
                 };
 
