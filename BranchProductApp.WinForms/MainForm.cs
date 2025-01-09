@@ -33,19 +33,9 @@ public partial class MainForm : Form
         return MessageBox.Show(message, title, buttons, icon);
     }
 
-    private DialogResult ConfirmDelete()
+    private DialogResult Confirm(string action, string entity)
     {
-        return ConfirmAction("Are you sure you want to delete this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-    }
-
-    private DialogResult ConfirmUpdate()
-    {
-        return ConfirmAction("Are you sure you want to update this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-    }
-
-    private DialogResult ConfirmCreate()
-    {
-        return ConfirmAction("Are you sure you want to create this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+        return ConfirmAction($"Are you sure you want to {action} this {entity}?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
     }
 
     private void ProductNameTextBox_TextChanged(object sender, EventArgs e)

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BranchProductApp.Core.Branches;
 using BranchProductApp.Core.Products;
 using BranchProductApp.Core.ProductBranchMappings;
+using BranchProductApp.Core.Helpers;
 using Serilog;
 
 namespace BranchProductApp.WinForms;
@@ -29,7 +30,7 @@ static class Program
         services.AddLogging(configure => configure.AddSerilog(dispose: true));
 
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer("Server=localhost;Database=BranchProductDb2;Trusted_Connection=True;TrustServerCertificate=True"));
+        options.UseSqlServer(ConfigHelper.GetConnectionString()));
 
 
         services.AddTransient<IBranchService, BranchService>();

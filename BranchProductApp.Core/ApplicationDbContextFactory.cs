@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BranchProductApp.Core.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace BranchProductApp.Core
@@ -8,7 +9,7 @@ namespace BranchProductApp.Core
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost;Database=BranchProductDb2;Trusted_Connection=True;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(ConfigHelper.GetConnectionString());
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

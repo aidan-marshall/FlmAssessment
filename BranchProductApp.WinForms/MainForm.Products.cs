@@ -85,7 +85,7 @@ namespace BranchProductApp.WinForms
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == ProductDataGridView.Columns["ProductsColumnDeleteButton"]!.Index)
             {
-                var confirmResult = ConfirmAction("Are you sure you want to delete this product?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var confirmResult = Confirm("delete", "product");
 
                 if (confirmResult == DialogResult.Yes)
                 {
@@ -110,7 +110,7 @@ namespace BranchProductApp.WinForms
                 var selectedProduct = ProductDataGridView.Rows[e.RowIndex].DataBoundItem as Product;
                 if (selectedProduct != null)
                 {
-                    var confirmResult = ConfirmUpdate();
+                    var confirmResult = Confirm("update", "product");
 
 
                     if (confirmResult == DialogResult.Yes)

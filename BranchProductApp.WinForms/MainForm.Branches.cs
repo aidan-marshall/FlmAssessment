@@ -125,7 +125,7 @@ namespace BranchProductApp.WinForms
 
             if (e.RowIndex >= 0 && e.ColumnIndex == BranchDataGridView.Columns["BranchColumnDeleteButton"]!.Index)
             {
-                var confirmResult = ConfirmDelete();
+                var confirmResult = Confirm("delete", "branch");
 
                 if (confirmResult == DialogResult.Yes)
                 {
@@ -142,7 +142,7 @@ namespace BranchProductApp.WinForms
                 var selectedBranch = BranchDataGridView.Rows[e.RowIndex].DataBoundItem as Branch;
                 if (selectedBranch != null)
                 {
-                    var confirmResult = ConfirmUpdate();
+                    var confirmResult = Confirm("update", "branch");
 
 
                     if (confirmResult == DialogResult.Yes)
